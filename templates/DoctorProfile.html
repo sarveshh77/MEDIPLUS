@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Doctor Dashboard</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <link rel="stylesheet" href="../static/css/DoctorProfile.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+        <div class="logo">
+            <a href="index.html"><img src="../static/img/logo.png" alt="Logo"></a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('doctors') }}">Doctors</a></li>
+                <li><a href="mailto:telimidicine@gmail.com" autocapitalize="false">telimidicine@gmail.com</a></li>
+                <li><button id="logout-btn" class="logout-btn">
+                  <i class="fas fa-sign-out-alt"></i> Logout
+                </button></li>
+            </ul>
+        </nav>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="profile-header">
+      <div class="profile-image" id="profile-image">
+        <img src="https://static.vecteezy.com/system/resources/previews/015/407/577/non_2x/doctor-round-avatar-medicine-flat-avatar-with-male-doctor-medical-clinic-team-round-icon-medical-collection-illustration-vector.jpg" alt="Doctor's photo" id="doctor-img">
+      </div>
+      <div class="profile-info">
+        <h1 id="doctor-name">Loading...</h1>
+        <p><i class="fas fa-stethoscope"></i> <span id="specialization"></span></p>
+        <p><i class="fas fa-clinic-medical"></i> <span id="clinic-name"></span></p>
+        <div class="rating">
+          <i class="fas fa-star"></i> 4.8 (236 reviews)
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-grid">
+      <!-- Doctor Details Section -->
+      <div class="profile-details">
+        <h2 class="section-title"><i class="fas fa-user-md"></i> Doctor Information</h2>
+        <!-- Doctor details here -->
+        <div class="detail-item">
+          <i class="fas fa-envelope"></i>
+          <span class="detail-label">Email:</span>
+          <span id="email"></span>
+        </div>
+        
+       <div class="detail-item">
+          <i class="fas fa-phone"></i>
+          <span class="detail-label">Contact:</span>
+          <span id="contact"></span>
+        </div>
+        
+       
+        
+        <div class="detail-item">
+          <i class="fas fa-id-card"></i>
+          <span class="detail-label">License Number:</span>
+          <span id="license-number"></span>
+        </div>
+        
+        <div class="detail-item">
+          <i class="fas fa-landmark"></i>
+          <span class="detail-label">Issuing Authority:</span>
+          <span id="issuing-authority"></span>
+        </div>
+        
+        <div class="detail-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <span class="detail-label">Address:</span>
+          <span id="address-text"></span>
+        </div>
+        
+        <!-- Virtual Appointments -->
+        <div class="detail-item">
+          <i class="fas fa-video"></i>
+          <span class="detail-label">Virtual Availability Days:</span>
+          <span id="virtual-availability-days"></span>
+        </div>
+        
+        <div class="detail-item">
+          <i class="fas fa-clock"></i>
+          <span class="detail-label">Virtual Availability Hours:</span>
+          <span id="virtual-availability-hours"></span>
+        </div>
+        
+        <div class="detail-item">
+          <i class="fas fa-users"></i>
+          <span class="detail-label">Virtual Patients Per Day:</span>
+          <span id="virtual-patients-per-day"></span>
+        </div>
+        
+        <div class="detail-item">
+          <i class="fas fa-link"></i>
+          <span class="detail-label">Meet Link:</span>
+          <span id="meet-link"></span>
+        </div>
+        
+        <!-- In-Person Appointments -->
+        <div class="detail-item">
+          <i class="fas fa-users"></i>
+          <span class="detail-label">In-Person Availability Days:</span>
+          <span id="in-person-availability-days"></span>
+        </div>
+        
+        <div class="detail-item">
+          <i class="fas fa-clock"></i>
+          <span class="detail-label">In-Person Availability Hours:</span>
+          <span id="in-person-availability-hours"></span>
+        </div>
+        
+        <div class="detail-item">
+          <i class="fas fa-users"></i>
+          <span class="detail-label">In-Person Patients Per Day:</span>
+          <span id="in-person-patients-per-day"></span>
+        </div>
+        
+        <!-- Zip Code -->
+        <div class="detail-item">
+          <i class="fas fa-map-pin"></i>
+          <span class="detail-label">Zip Code:</span>
+          <span id="zip-code"></span>
+        </div>
+
+        <a id="map-link" class="map-link" target="_blank">
+          <i class="fas fa-map"></i> View on Map
+        </a>
+
+        <!-- Edit Profile Button -->
+        <button id="edit-profile-btn" class="logout-btn" style="margin-top: 20px;">
+          <i class="fas fa-edit"></i> Edit Profile
+        </button>
+      </div>
+     
+
+      <!-- Appointments Section -->
+      <div class="appointments-section">
+        <h2 class="section-title"><i class="fas fa-calendar-check"></i> Patient Appointments</h2>
+        
+        <div class="calendar-section">
+          <div class="calendar-header">
+            <h3 id="current-month">March 2025</h3>
+            <div class="calendar-controls">
+              <button id="prev-month"><i class="fas fa-chevron-left"></i></button>
+              <button id="next-month"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+          
+          <div class="calendar-grid" id="weekdays">
+            <div class="calendar-day">Sun</div>
+            <div class="calendar-day">Mon</div>
+            <div class="calendar-day">Tue</div>
+            <div class="calendar-day">Wed</div>
+            <div class="calendar-day">Thu</div>
+            <div class="calendar-day">Fri</div>
+            <div class="calendar-day">Sat</div>
+          </div>
+          
+          <div class="calendar-grid" id="calendar-dates">
+            <!-- Dates will be dynamically generated -->
+          </div>
+        </div>
+        
+        <div id="appointments-list" class="appointments-list">
+          <div class="no-appointments">
+            <i class="fas fa-calendar-day"></i>
+            <p>Select a date to view appointments</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Completed Appointments Section -->
+    <div class="completed-appointments-section">
+      <h2 class="section-title"><i class="fas fa-check-circle"></i> Completed Appointments</h2>
+      
+      <div class="calendar-section">
+        <div class="calendar-header">
+          <h3 id="completed-current-month">March 2025</h3>
+          <div class="calendar-controls">
+            <button id="completed-prev-month"><i class="fas fa-chevron-left"></i></button>
+            <button id="completed-next-month"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </div>
+        
+        <div class="calendar-grid" id="completed-weekdays">
+          <div class="calendar-day">Sun</div>
+          <div class="calendar-day">Mon</div>
+          <div class="calendar-day">Tue</div>
+          <div class="calendar-day">Wed</div>
+          <div class="calendar-day">Thu</div>
+          <div class="calendar-day">Fri</div>
+          <div class="calendar-day">Sat</div>
+        </div>
+        
+        <div class="calendar-grid" id="completed-calendar-dates">
+          <!-- Dates will be dynamically generated -->
+        </div>
+      </div>
+      
+      <div id="completed-appointments-list" class="completed-appointments-list">
+        <div class="no-appointments">
+          <i class="fas fa-calendar-check"></i>
+          <p>Select a date to view completed appointments</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prescription Modal -->
+  <div id="prescriptionModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Create Prescription</h2>
+        <span class="close-btn">&times;</span>
+      </div>
+      <form id="prescriptionForm">
+        <div class="form-group">
+          <label for="diagnosis">Diagnosis</label>
+          <input type="text" id="diagnosis" name="diagnosis" placeholder="Enter diagnosis" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="notes">Notes</label>
+          <textarea id="notes" name="notes" placeholder="Additional notes for the patient"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label>Medications</label>
+          <div id="medications-container">
+            <div class="medication-row">
+              <input type="text" name="medicationName[]" placeholder="Medication name" required>
+              <input type="text" name="medicationDosage[]" placeholder="Dosage" required>
+              <input type="text" name="medicationDuration[]" placeholder="Duration" required>
+            </div>
+          </div>
+          <button type="button" id="addMedication" class="add-medication">
+            <i class="fas fa-plus"></i> Add Medication
+          </button>
+        </div>
+        
+        <div class="form-group">
+          <label for="followUpDate">Follow-up Date</label>
+          <input type="date" id="followUpDate" name="followUpDate">
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" id="skipPrescription" class="skip-btn">Skip Prescription</button>
+          <button type="submit" class="submit-btn">Save Prescription</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script type="module">
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyC0ncA7or5DGpfMj3bxYpz7pAmNDhJy9aM",
+      authDomain: "bookmydoc-7b3d1.firebaseapp.com",
+      projectId: "bookmydoc-7b3d1",
+      storageBucket: "bookmydoc-7b3d1.appspot.com",
+      messagingSenderId: "182899610658",
+      appId: "1:182899610658:web:105b642d77c7a4b1fb267b",
+      measurementId: "G-NBX1LDNMV3",
+    };
+
+    // Initialize Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      getDocs, 
+      doc, 
+      setDoc, 
+      deleteDoc,
+      serverTimestamp,
+      getDoc
+    } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Global variables
+    let currentAppointmentData = null;
+    let currentAppointments = [];
+    let completedAppointmentsDate = new Date();
+
+    // Logout functionality
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      localStorage.removeItem("doctorUniqueKey");
+      localStorage.removeItem("doctorSpecialization");
+      window.location.href = "/";
+    });
+
+    // Initialize dashboard
+    const doctorUniqueKey = localStorage.getItem("doctorUniqueKey");
+    const doctorSpecialization = localStorage.getItem("doctorSpecialization");
+
+    if (!doctorUniqueKey || !doctorSpecialization) {
+      alert("Please log in first.");
+      window.location.href = "login.html";
+    } else {
+      fetchDoctorProfileByUniqueKey(doctorUniqueKey, doctorSpecialization)
+        .then(() => {
+          generateCompletedCalendar(completedAppointmentsDate);
+          fetchCompletedAppointmentsForDate(formatDate(completedAppointmentsDate));
+        })
+        .catch(error => console.error("Initialization error:", error));
+    }
+
+    // Function to fetch doctor profile by unique key and specialization
+    async function fetchDoctorProfileByUniqueKey(uniqueKey, specialization) {
+      try {
+        const querySnapshot = await getDocs(collection(db, `DoctorsBySpecialization/${specialization}/Doctors`));
+    
+        let doctorFound = false;
+    
+        querySnapshot.forEach((doc) => {
+          const doctor = doc.data();
+    
+          if (doctor.uniqueKey === uniqueKey) {
+            doctorFound = true;
+            populateProfileData(doctor);
+            return doctor;
+          }
+        });
+    
+        if (!doctorFound) {
+          console.error("Doctor not found in the specified specialization:", specialization);
+          return null;
+        }
+      } catch (error) {
+        console.error("Error fetching doctor profile: ", error);
+        return null;
+      }
+    }
+
+    // Function to populate the UI with the doctor data
+    function populateProfileData(data) {
+      document.getElementById('doctor-name').textContent = data.fullName || "N/A";
+      document.getElementById('specialization').textContent = data.specialization || "N/A";
+      document.getElementById('email').textContent = data.email || "N/A";
+      document.getElementById('contact').textContent = data.phoneNumber || "N/A";
+      document.getElementById('license-number').textContent = data.licenseNumber || "N/A";
+      document.getElementById('issuing-authority').textContent = data.issuingAuthority || "N/A";
+      document.getElementById('clinic-name').textContent = data.clinicName || "N/A";
+      document.getElementById('address-text').textContent = data.steetaddress || "N/A";
+    
+      // Virtual Appointments
+      if (data.virtualAppointments) {
+        document.getElementById('virtual-availability-days').textContent = data.virtualAppointments.days.join(", ") || "N/A";
+        document.getElementById('virtual-availability-hours').textContent = data.virtualAppointments.fromTime + " to " + data.virtualAppointments.toTime || "N/A";
+        document.getElementById('virtual-patients-per-day').textContent = data.virtualAppointments.patientsPerDay || "N/A";
+        document.getElementById('meet-link').textContent = data.virtualAppointments.meetlink || "N/A";
+      } else {
+        document.getElementById('virtual-availability-days').textContent = "N/A";
+        document.getElementById('virtual-availability-hours').textContent = "N/A";
+        document.getElementById('virtual-patients-per-day').textContent = "N/A";
+        document.getElementById('meet-link').textContent = "N/A";
+      }
+    
+      // In-Person Appointments
+      if (data.inPersonAppointments) {
+        document.getElementById('in-person-availability-days').textContent = data.inPersonAppointments.days.join(", ") || "N/A";
+        document.getElementById('in-person-availability-hours').textContent = data.inPersonAppointments.fromTime + " to " + data.inPersonAppointments.toTime || "N/A";
+        document.getElementById('in-person-patients-per-day').textContent = data.inPersonAppointments.patientsPerDay || "N/A";
+      } else {
+        document.getElementById('in-person-availability-days').textContent = "N/A";
+        document.getElementById('in-person-availability-hours').textContent = "N/A";
+        document.getElementById('in-person-patients-per-day').textContent = "N/A";
+      }
+    
+      document.getElementById('zip-code').textContent = data.zip || "N/A";
+    
+      // Generate Google Maps link
+      const mapLink = `https://www.google.com/maps?q=${data.location.latitude},${data.location.longitude}`;
+      document.getElementById('map-link').href = mapLink;
+    }
+
+    // Calendar functionality
+    const calendarDates = document.getElementById('calendar-dates');
+    const currentMonthElement = document.getElementById('current-month');
+    const prevMonthButton = document.getElementById('prev-month');
+    const nextMonthButton = document.getElementById('next-month');
+    const appointmentsList = document.getElementById('appointments-list');
+
+    let currentDate = new Date();
+    let selectedDate = null;
+
+    function generateCalendar(date) {
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      
+      currentMonthElement.textContent = new Date(year, month, 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+      
+      calendarDates.innerHTML = '';
+      
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      
+      for (let i = 0; i < firstDay; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'calendar-date';
+        calendarDates.appendChild(emptyCell);
+      }
+      
+      for (let i = 1; i <= daysInMonth; i++) {
+        const dateCell = document.createElement('div');
+        dateCell.className = 'calendar-date';
+        const dateObj = new Date(year, month, i);
+        
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+        dateCell.dataset.date = dateStr;
+        dateCell.textContent = i;
+        
+        dateCell.addEventListener('click', function() {
+          document.querySelectorAll('.calendar-date.active').forEach(el => el.classList.remove('active'));
+          this.classList.add('active');
+          
+          selectedDate = this.dataset.date;
+          fetchAppointmentsForDate(selectedDate);
+        });
+        
+        calendarDates.appendChild(dateCell);
+      }
+    }
+
+    generateCalendar(currentDate);
+
+    prevMonthButton.addEventListener('click', function() {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      generateCalendar(currentDate);
+    });
+
+    nextMonthButton.addEventListener('click', function() {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      generateCalendar(currentDate);
+    });
+
+    // Completed Appointments Calendar
+    const completedCalendarDates = document.getElementById('completed-calendar-dates');
+    const completedCurrentMonthElement = document.getElementById('completed-current-month');
+    const completedPrevMonthButton = document.getElementById('completed-prev-month');
+    const completedNextMonthButton = document.getElementById('completed-next-month');
+
+    function generateCompletedCalendar(date) {
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      
+      completedCurrentMonthElement.textContent = new Date(year, month, 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+      
+      completedCalendarDates.innerHTML = '';
+      
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      
+      for (let i = 0; i < firstDay; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'calendar-date';
+        completedCalendarDates.appendChild(emptyCell);
+      }
+      
+      for (let i = 1; i <= daysInMonth; i++) {
+        const dateCell = document.createElement('div');
+        dateCell.className = 'calendar-date';
+        const dateObj = new Date(year, month, i);
+        
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+        dateCell.dataset.date = dateStr;
+        dateCell.textContent = i;
+        
+        dateCell.addEventListener('click', function() {
+          document.querySelectorAll('#completed-calendar-dates .calendar-date.active').forEach(el => el.classList.remove('active'));
+          this.classList.add('active');
+          
+          completedAppointmentsDate = new Date(dateStr);
+          fetchCompletedAppointmentsForDate(dateStr);
+        });
+        
+        completedCalendarDates.appendChild(dateCell);
+      }
+    }
+
+    completedPrevMonthButton.addEventListener('click', function() {
+      completedAppointmentsDate.setMonth(completedAppointmentsDate.getMonth() - 1);
+      generateCompletedCalendar(completedAppointmentsDate);
+    });
+
+    completedNextMonthButton.addEventListener('click', function() {
+      completedAppointmentsDate.setMonth(completedAppointmentsDate.getMonth() + 1);
+      generateCompletedCalendar(completedAppointmentsDate);
+    });
+
+    // Helper function to format date as YYYY-MM-DD
+    function formatDate(date) {
+      const d = new Date(date);
+      let month = '' + (d.getMonth() + 1);
+      let day = '' + d.getDate();
+      const year = d.getFullYear();
+
+      if (month.length < 2) month = '0' + month;
+      if (day.length < 2) day = '0' + day;
+
+      return [year, month, day].join('-');
+    }
+
+    async function fetchAppointmentsForDate(dateString) {
+      appointmentsList.innerHTML = '';
+      currentAppointments = [];
+      
+      try {
+        const doctorName = document.getElementById('doctor-name').textContent.trim();
+        const specialization = document.getElementById('specialization').textContent.trim();
+
+        // Fetch in-person appointments
+        const inPersonPath = `DoctorsBySpecialization/${specialization}/Doctors/${doctorName}/Appointments/in-person/${dateString}`;
+        const inPersonSnapshot = await getDocs(collection(db, inPersonPath));
+
+        // Fetch virtual appointments
+        const virtualPath = `DoctorsBySpecialization/${specialization}/Doctors/${doctorName}/Appointments/virtual/${dateString}`;
+        const virtualSnapshot = await getDocs(collection(db, virtualPath));
+
+        // Process appointments
+        inPersonSnapshot.forEach(doc => {
+          currentAppointments.push({
+            ...doc.data(),
+            id: doc.id,
+            type: 'in-person',
+            date: dateString,
+            patientName: doc.id
+          });
+        });
+
+        virtualSnapshot.forEach(doc => {
+          currentAppointments.push({
+            ...doc.data(),
+            id: doc.id,
+            type: 'virtual',
+            date: dateString,
+            patientName: doc.id
+          });
+        });
+
+        // Sort appointments
+        currentAppointments.sort((a, b) => {
+          if (b.severityValue === a.severityValue) {
+            return (a.timestamp || 0) - (b.timestamp || 0);
+          }
+          return (b.severityValue || 0) - (a.severityValue || 0);
+        });
+
+        // Display appointments
+        if (currentAppointments.length === 0) {
+          appointmentsList.innerHTML = `
+            <div class="no-appointments">
+              <i class="fas fa-calendar-times"></i>
+              <p>No appointments scheduled for this date</p>
+            </div>
+          `;
+          return;
+        }
+
+        currentAppointments.forEach((appointment, index) => {
+          const appointmentCard = document.createElement('div');
+          appointmentCard.className = `appointment-card ${appointment.type}`;
+          
+          if (index === 0) {
+            appointmentCard.style.borderLeft = '4px solid var(--accent-color)';
+            appointmentCard.style.boxShadow = '0 0 10px rgba(247, 37, 133, 0.2)';
+          }
+          
+          appointmentCard.innerHTML = `
+            <div class="appointment-header">
+              <div class="appointment-type">
+                <i class="fas fa-${appointment.type === 'virtual' ? 'video' : 'user-md'}"></i>
+                ${appointment.type === 'virtual' ? 'Virtual Consultation' : 'In-Person Visit'}
+              </div>
+              <div class="appointment-severity">
+                <strong>Severity:</strong> ${appointment.severityValue || "N/A"}
+              </div>
+            </div>
+            <div class="appointment-patient">
+              <i class="fas fa-user"></i>
+              <span>Patient: ${appointment.name || appointment.patientName || "N/A"}</span>
+            </div>
+            <div class="appointment-patient">
+              <i class="fas fa-info-circle"></i>
+              <span>Symptoms: ${appointment.symptoms || "N/A"}</span>
+            </div>
+            <div class="appointment-time">
+      <i class="fas fa-clock"></i>
+      <strong>Appointment Time:</strong> ${appointment.appointmentTime  || "To be scheduled"}
+    </div>
+            <div class="appointment-actions">
+              ${appointment.type === 'virtual' ? 
+                '<button class="join-btn"><i class="fas fa-video"></i> Join Meeting</button>' : 
+                ''}
+              <button class="complete-btn" ${index !== 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                <i class="fas fa-check"></i> Mark as Completed
+              </button>
+            </div>
+          `;
+          
+          // Store complete appointment data including username
+          appointmentCard.dataset.appointmentData = JSON.stringify({
+            ...appointment,
+            username: appointment.username || "Not provided"
+          });
+          
+          appointmentsList.appendChild(appointmentCard);
+        });
+
+        // Add event listeners
+        document.querySelectorAll('.join-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const meetLink = document.getElementById('meet-link').textContent;
+            if (meetLink && meetLink !== "N/A") {
+              window.open(meetLink, '_blank');
+            } else {
+              alert('No meeting link available');
+            }
+          });
+        });
+
+        document.querySelectorAll('.complete-btn:not([disabled])').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const appointmentCard = this.closest('.appointment-card');
+            currentAppointmentData = JSON.parse(appointmentCard.dataset.appointmentData);
+            openPrescriptionModal();
+          });
+        });
+
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+        appointmentsList.innerHTML = `
+          <div class="no-appointments">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Error loading appointments. Please try again.</p>
+          </div>
+        `;
+      }
+    }
+
+    async function fetchCompletedAppointmentsForDate(dateString) {
+      const completedAppointmentsList = document.getElementById('completed-appointments-list');
+      completedAppointmentsList.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading completed appointments...</div>';
+    
+      try {
+        const doctorName = document.getElementById('doctor-name').textContent.trim();
+        const specialization = document.getElementById('specialization').textContent.trim();
+        
+        const completedPath = `DoctorsBySpecialization/${specialization}/Doctors/${doctorName}/CompletedAppointments/${dateString}/appointments`;
+        const completedSnapshot = await getDocs(collection(db, completedPath));
+        
+        if (completedSnapshot.empty) {
+          completedAppointmentsList.innerHTML = `
+            <div class="no-appointments">
+              <i class="fas fa-calendar-check"></i>
+              <p>No completed appointments for this date</p>
+            </div>
+          `;
+          return;
+        }
+        
+        const appointments = [];
+        
+        completedSnapshot.forEach(doc => {
+          const appointmentData = doc.data();
+          appointments.push({
+            id: doc.id,
+            ...appointmentData,
+            completedAt: appointmentData.completedAt?.toDate?.() || new Date()
+          });
+        });
+        
+        // Sort by completion time (newest first)
+        appointments.sort((a, b) => b.completedAt - a.completedAt);
+        
+        completedAppointmentsList.innerHTML = '';
+        
+        appointments.forEach(appointment => {
+          const appointmentCard = document.createElement('div');
+          appointmentCard.className = 'appointment-card completed';
+          
+          const completedDate = appointment.completedAt.toLocaleDateString();
+          const completedTime = appointment.completedAt.toLocaleTimeString();
+          const originalDate = new Date(appointment.originalDate).toLocaleDateString();
+          const followUpDate = appointment.prescription?.followUpDate 
+            ? new Date(appointment.prescription.followUpDate).toLocaleDateString() 
+            : "No follow-up scheduled";
+          
+          appointmentCard.innerHTML = `
+            <div class="appointment-header">
+              <div class="appointment-meta">
+                <span class="appointment-date">Original Date: ${originalDate}</span>
+                <span class="completion-time">Completed: ${completedDate} at ${completedTime}</span>
+              </div>
+            </div>
+            <div class="appointment-details">
+              <div class="appointment-patient">
+                <i class="fas fa-user"></i>
+                <span>Patient: ${appointment.patientName}</span>
+              </div>
+              <div class="appointment-patient">
+                <i class="fas fa-user-circle"></i>
+                <span>Username: ${appointment.username || "Not provided"}</span>
+              </div>
+              <div class="appointment-diagnosis">
+                <i class="fas fa-stethoscope"></i>
+                <span>Diagnosis: ${appointment.prescription?.diagnosis || "No diagnosis provided"}</span>
+              </div>
+              <div class="appointment-followup">
+                <i class="fas fa-calendar-plus"></i>
+                <span>Follow-up: ${followUpDate}</span>
+              </div>
+              ${appointment.prescription?.medications?.length > 0 ? `
+                <div class="appointment-medications">
+                  <i class="fas fa-pills"></i>
+                  <span>Medications:</span>
+                  <ul>
+                    ${appointment.prescription.medications.map(med => 
+                      `<li>${med.name} - ${med.dosage} for ${med.duration}</li>`
+                    ).join('')}
+                  </ul>
+                </div>
+              ` : ''}
+              ${appointment.prescription?.notes ? `
+                <div class="appointment-notes">
+                  <i class="fas fa-notes-medical"></i>
+                  <span>Notes: ${appointment.prescription.notes}</span>
+                </div>
+              ` : ''}
+            </div>
+          `;
+          
+          completedAppointmentsList.appendChild(appointmentCard);
+        });
+        
+      } catch (error) {
+        console.error("Error fetching completed appointments:", error);
+        completedAppointmentsList.innerHTML = `
+          <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p>Failed to load completed appointments</p>
+            <p class="error-detail">${error.message}</p>
+            <button onclick="fetchCompletedAppointmentsForDate('${dateString}')" class="retry-btn">
+              <i class="fas fa-sync-alt"></i> Try Again
+            </button>
+          </div>
+        `;
+      }
+    }
+
+    async function markAppointmentAsCompleted(prescription) {
+      if (!currentAppointmentData) return;
+    
+      try {
+        const doctorName = document.getElementById('doctor-name').textContent.trim(); // Get doctorName from profile
+        const specialization = document.getElementById('specialization').textContent.trim();
+        const originalDate = currentAppointmentData.date;
+    
+        // Create completed appointment data
+        const completedAppointment = {
+          patientName: currentAppointmentData.name || currentAppointmentData.patientName || "Not provided",
+          username: currentAppointmentData.username || "Not provided", // Store username
+          doctorName: doctorName || "Not provided", // Store doctorName
+          type: currentAppointmentData.type || "unknown",
+          originalDate: originalDate,
+          symptoms: currentAppointmentData.symptoms || "Not provided",
+          severityValue: currentAppointmentData.severityValue || "Not specified",
+          completedAt: serverTimestamp(),
+          prescription: prescription || null
+        };
+    
+        // Add to doctor's completed appointments
+        const completedPath = `DoctorsBySpecialization/${specialization}/Doctors/${doctorName}/CompletedAppointments/${originalDate}/appointments`;
+        await setDoc(
+          doc(db, completedPath, currentAppointmentData.patientName || currentAppointmentData.id), 
+          completedAppointment
+        );
+    
+        // Add to user's completedAppointments subcollection
+        const userCompletedPath = `users/${currentAppointmentData.username || "UnknownUser"}/completedAppointments`;
+        await setDoc(
+          doc(db, userCompletedPath, currentAppointmentData.id),
+          completedAppointment
+        );
+    
+        // Remove from doctor's active appointments
+        const appointmentPath = `DoctorsBySpecialization/${specialization}/Doctors/${doctorName}/Appointments/${currentAppointmentData.type}/${currentAppointmentData.date}/${currentAppointmentData.patientName}`;
+        await deleteDoc(doc(db, appointmentPath));
+    
+        // Remove from patient's active appointments
+        const patientAppointmentPath = `users/${currentAppointmentData.username || "UnknownUser"}/appointments/${currentAppointmentData.type}_${currentAppointmentData.date}`;
+        await deleteDoc(doc(db, patientAppointmentPath));
+    
+        // Refresh UI
+        if (selectedDate) await fetchAppointmentsForDate(selectedDate);
+        await fetchCompletedAppointmentsForDate(formatDate(completedAppointmentsDate));
+    
+        alert('Appointment completed successfully!');
+      } catch (error) {
+        console.error("Error completing appointment:", error);
+        alert('Error completing appointment. Please try again.');
+      }
+    }
+
+    // Prescription Modal Functions
+    const prescriptionModal = document.getElementById('prescriptionModal');
+    const closeBtn = document.querySelector('.close-btn');
+    const skipBtn = document.getElementById('skipPrescription');
+    const prescriptionForm = document.getElementById('prescriptionForm');
+    const addMedicationBtn = document.getElementById('addMedication');
+    const medicationsContainer = document.getElementById('medications-container');
+
+    function openPrescriptionModal() {
+      prescriptionModal.style.display = 'block';
+      prescriptionForm.reset();
+      
+      // Clear any additional medication fields (keep the first one)
+      while (medicationsContainer.children.length > 1) {
+        medicationsContainer.removeChild(medicationsContainer.lastChild);
+      }
+    }
+
+    function closePrescriptionModal() {
+      prescriptionModal.style.display = 'none';
+    }
+
+    closeBtn.addEventListener('click', closePrescriptionModal);
+
+    // Skip prescription
+    skipBtn.addEventListener('click', () => {
+      markAppointmentAsCompleted(null);
+      closePrescriptionModal();
+    });
+
+    // Add medication row
+    addMedicationBtn.addEventListener('click', () => {
+      const newRow = document.createElement('div');
+      newRow.className = 'medication-row';
+      newRow.innerHTML = `
+        <input type="text" name="medicationName[]" placeholder="Medication name" required>
+        <input type="text" name="medicationDosage[]" placeholder="Dosage" required>
+        <input type="text" name="medicationDuration[]" placeholder="Duration" required>
+        <button type="button" class="remove-medication"><i class="fas fa-times"></i></button>
+      `;
+      medicationsContainer.appendChild(newRow);
+      
+      newRow.querySelector('.remove-medication').addEventListener('click', () => {
+        medicationsContainer.removeChild(newRow);
+      });
+    });
+
+    // Submit prescription form
+    prescriptionForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(prescriptionForm);
+      const medications = [];
+      
+      // Process medications
+      const names = formData.getAll('medicationName[]');
+      const dosages = formData.getAll('medicationDosage[]');
+      const durations = formData.getAll('medicationDuration[]');
+      
+      for (let i = 0; i < names.length; i++) {
+        medications.push({
+          name: names[i],
+          dosage: dosages[i],
+          duration: durations[i]
+        });
+      }
+      
+      // Create prescription object
+      const prescription = {
+        diagnosis: formData.get('diagnosis'),
+        notes: formData.get('notes'),
+        medications: medications,
+        followUpDate: formData.get('followUpDate'),
+        createdAt: new Date().toISOString()
+      };
+      
+      try {
+        // Mark as completed with prescription
+        await markAppointmentAsCompleted(prescription);
+        closePrescriptionModal();
+      } catch (error) {
+        console.error("Error completing appointment with prescription:", error);
+        alert('Error saving prescription. Please try again.');
+      }
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+      if (e.target === prescriptionModal) {
+        closePrescriptionModal();
+      }
+    });
+</script>
+</html>

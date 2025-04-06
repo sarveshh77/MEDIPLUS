@@ -1,0 +1,65 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #333;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #007bff;
+  }
+  
+  .specialization-section {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background: #f4f4f4;
+    margin-bottom: 20px;
+  }
+  
+  .specialization-section h3 {
+    margin: 0;
+    padding: 10px;
+    background: #007bff;
+    color: #fff;
+    border-radius: 6px;
+  }
+  
+  .doctor-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .doctor-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .doctor-list li:last-child {
+    border-bottom: none;
+  }
+  
+  .doctor-list li:hover {
+    background: #e9f5ff;
+  }
+  
+  .doctor-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+      

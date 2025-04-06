@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+<html lang="en">
+<head>
+    <script type="module" src="../static/js/doctor_reg.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-analytics.js"></script>
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Registration Form</title>
+    <style>
+        .marquee-container {
+            color: #d30d1a;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;  
+            width: 100%;
+        }
+        .marquee-container a {
+            color: #1d6ac9;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .marquee-container a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+    
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url('../static/img/regdoc.jpg');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            color: black;   
+        }
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #007bff;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        h1 {
+            text-align: center;
+            color: #000;
+            margin-bottom: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: #eceef0;
+            color: black;
+            padding: 10px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        header .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+        }
+        header .logo img {
+            max-height: 50px;
+        }
+        header nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        header nav ul li {
+            margin: 0 15px;
+        }
+        header nav ul li a {
+            color: rgb(20, 19, 19);
+            text-decoration: none;
+            font-size: 16px;
+        }
+        header nav ul li a:hover {
+            text-decoration: underline;
+            color: #007bff;
+        }
+
+        /* Form Container */
+        .form-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            color: black;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .form-group {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: white;
+            color: black;
+            font-size: 16px;
+        }
+        input[type="checkbox"] {
+            width: auto;
+        }
+        input[type="submit"] {
+            background: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 15px;
+            margin: 10px 0;
+            width: 100%;
+        }
+        input[type="submit"]:hover {
+            background: #0056b3;
+        }
+        .checkbox-group, .time-picker {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .checkbox-group label {
+            margin-right: 10px;
+        }
+
+        /* Appointment Sections */
+        .appointment-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .appointment-section h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        
+        .appointment-type-selector {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+            border: 1px solid #b8daff;
+        }
+        
+        .appointment-type-selector label {
+            font-weight: bold;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
+        /* Modal Styles */
+        #termsModal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            width: 50%;
+        }
+        #termsModal h2 {
+            margin-top: 0;
+        }
+        #termsModal button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #termsModal button:hover {
+            background: #0056b3;
+        }
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 500;
+        }
+        
+        /* Main content hidden initially */
+        #content {
+            display: none;
+        }
+
+        /* Main content visible after preloader is hidden */
+        body.loaded #preloader {
+            display: none;
+        }
+
+        body.loaded #content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html"><img src="../static/img/logo.png" alt="Logo"></a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('doctors') }}">Doctors</a></li>
+                    <li><a href="mailto:telimidicine@gmail.com" autocapitalize="false">telimidicine@gmail.com</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader-outter"></div>
+            <div class="loader-inner"></div>
+
+            <div class="indicator"> 
+                <svg width="16px" height="12px">
+                    <polyline id="back" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+                    <polyline id="front" points="1 6 4 6 6 11 10 1 12 6 15 6"></polyline>
+                </svg>
+            </div>
+        </div>
+        
+    </div>
+    <!-- End Preloader -->
+    <div class="marquee-container">
+        <marquee behavior="scroll" direction="left">
+            🚨 <strong>Doctor Registration Notice:</strong> Please register only from your hospital location. Your location (Latitude & Longitude) will be recorded. 
+            If you need assistance, contact <a href="mailto:telemedicine@gmail.com">telemedicine@gmail.com</a>. 🚨
+        </marquee>
+    </div>
+    <!-- Registration Form -->
+    <div class="form-container">
+        <h1>Doctor Registration</h1>
+        <form id="doctorForm">
+            <div class="form-group">
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number" required>
+            </div>
+            <div class="form-group">
+                <label for="specialization">Specialization:</label>
+                <select id="specialization" name="specialization" required>
+                    <option value="">Select Specialization</option>
+                    <option value="allergist">Allergist</option>
+                    <option value="cardiologist">Cardiologist</option>
+                    <option value="dermatologist">Dermatologist</option>
+                    <option value="endocrinologist">Endocrinologist</option>
+                    <option value="gastroenterologist">Gastroenterologist</option>
+                    <option value="gynecologist">Gynecologist</option>
+                    <option value="hepatologist">Hepatologist</option>
+                    <option value="internal_medicine">Internal Medicine</option>
+                    <option value="neurologist">Neurologist</option>
+                    <option value="osteopathic_physician">Osteopathic Physician</option>
+                    <option value="otolaryngologist">Otolaryngologist</option>
+                    <option value="pediatrician">Pediatrician</option>
+                    <option value="phlebologist">Phlebologist</option>
+                    <option value="pulmonologist">Pulmonologist</option>
+                    <option value="rheumatologist">Rheumatologist</option>
+                    <option value="tuberculosis_specialist">Tuberculosis Specialist</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="qualification">Qualification:</label>
+                <input type="text" id="qualification" name="qualification" placeholder="Enter your qualification" required>
+            </div>
+            <div class="form-group">
+                <label for="issuingAuthority">Issuing Authority:</label>
+                <select id="issuingAuthority" name="issuingAuthority" required>
+                    <option value="">Select Issuing Authority</option>
+                    <option value="Andhra Pradesh Medical Council">Andhra Pradesh Medical Council</option>
+                    <option value="Arunachal Pradesh Medical">Arunachal Pradesh Medical</option>
+                    <option value="Assam Medical Council">Assam Medical Council</option>
+                    <option value="Bihar Medical Council">Bihar Medical Council</option>
+                    <option value="Chattisgarh Medical Council">Chattisgarh Medical Council</option>
+                    <option value="Delhi Medical Council">Delhi Medical Council</option>
+                    <option value="Goa Medical Council">Goa Medical Council</option>
+                    <option value="Gujarat Medical Council">Gujarat Medical Council</option>
+                    <option value="Haryana Medical Council">Haryana Medical Council</option>
+                    <option value="Himanchal Pradesh Medical">Himanchal Pradesh Medical</option>
+                    <option value="Jammu & Kashmir Medical Council">Jammu & Kashmir Medical Council</option>
+                    <option value="Jharkhand Medical Council">Jharkhand Medical Council</option>
+                    <option value="Karnataka Medical Council">Karnataka Medical Council</option>
+                    <option value="Madhya Pradesh Medical">Madhya Pradesh Medical</option>
+                    <option value="Maharashtra Medical Council">Maharashtra Medical Council</option>
+                    <option value="Manipur Medical Council">Manipur Medical Council</option>
+                    <option value="Mizoram Medical Council">Mizoram Medical Council</option>
+                    <option value="Nagaland Medical Council">Nagaland Medical Council</option>
+                    <option value="Orissa Council of Medical">Orissa Council of Medical</option>
+                    <option value="Punjab Medical Council">Punjab Medical Council</option>
+                    <option value="Rajasthan Medical Council">Rajasthan Medical Council</option>
+                    <option value="Sikkim Medical Council">Sikkim Medical Council</option>
+                    <option value="Tamil Nadu Medical Council">Tamil Nadu Medical Council</option>
+                    <option value="Telangana State Medical Council">Telangana State Medical Council</option>
+                    <option value="Travancore Cochin Medical">Travancore Cochin Medical</option>
+                    <option value="Tripura State Medical Council">Tripura State Medical Council</option>
+                    <option value="Uttarakhand Medical Council">Uttarakhand Medical Council</option>
+                    <option value="Uttar Pradesh Medical Council">Uttar Pradesh Medical Council</option>
+                    <option value="West Bengal Medical Council">West Bengal Medical Council</option>
+                    </select>
+            </div>
+            <div class="form-group">
+                <label for="licenseNumber">License Number:</label>
+                <input type="text" id="licenseNumber" name="licenseNumber" placeholder="Enter your license number" required>
+            </div>
+            <div class="form-group">
+                <label for="languages">Preferred Languages:</label>
+                <select id="languages" name="languages" multiple>
+                    <option value="English">English</option>
+                    <option value="French">French</option>
+                    <option value="German">German</option>
+                    <option value="Hindi">Hindi</option>
+                    <option value="Japanese">Japanese</option>
+                    <option value="Malay">Malay</option>
+                    <option value="Spanish">Spanish</option>
+                    <option value="Arabic">Arabic</option>
+                    <option value="Mandarin Chinese">Mandarin Chinese</option>
+                    <option value="Korean">Korean</option>
+                    <option value="Thai">Thai</option>
+                    <option value="Turkish">Turkish</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="clinicName">Clinic/Hospital Name:</label>
+                <input type="text" id="clinicName" name="clinicName" placeholder="Enter the clinic/hospital name" required>
+            </div>
+            <div class="form-group">
+                <label for="steetaddress">Enter Street Address Of Hospital</label>
+                <input type="text" id="steetaddress" name="steetaddress" placeholder="Enter Street Address" required>
+            </div>
+            <div class="form-group">
+                <label for="city">Enter City of Hospital</label>
+                <input type="text" id="city" name="city" placeholder="Enter City of Hospital" required>
+            </div>
+            <div class="form-group">
+                <label for="zip">Enter Zip/Postal code</label>
+                <input type="text" id="zip" name="zip" placeholder="Enter Zip/Postal code" required>
+            </div>
+            <div class="form-group">
+                <label for="country">Country:</label>
+                <select id="country" name="country" required>
+                    <option value="">Select Country</option>
+                    <option value="Australia">Australia</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Germany">Germany</option>
+                    <option value="India">India</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Malaysia">Malaysia</option>
+                    <option value="Mexico">Mexico</option>
+                    <option value="Saudi Arabia">Saudi Arabia</option>
+                    <option value="Singapore">Singapore</option>
+                    <option value="South Korea">South Korea</option>
+                    <option value="Thailand">Thailand</option>
+                    <option value="Turkey">Turkey</option>
+                    <option value="United Arab Emirates">United Arab Emirates</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="United States">United States</option>
+                </select>
+            </div>
+            
+            <!-- Appointment Type Selection -->
+            <div class="form-group appointment-type-selector">
+                <label>Appointment Types You Will Handle:</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="virtualAppointments" name="appointmentTypes" value="Virtual" onchange="toggleAppointmentSection('virtual')"> Virtual Appointments</label>
+                    <label><input type="checkbox" id="inPersonAppointments" name="appointmentTypes" value="InPerson" onchange="toggleAppointmentSection('inPerson')"> In-Person Appointments</label>
+                </div>
+            </div>
+
+            <!-- Virtual Appointments Section -->
+            <div id="virtualAppointmentsSection" class="appointment-section" style="display: none;">
+                <h3>Virtual Appointments Settings</h3>
+                
+                <div class="form-group">
+                    <label for="meetlink">Virtual Consultation Link:</label>
+                    <input type="text" id="meetlink" name="meetlink" placeholder="Paste your consultation link here">
+                </div>
+                
+                <div class="form-group">
+                    <label for="virtualPatientsPerDay">Number of Virtual Appointments Per Day:</label>
+                    <input type="number" id="virtualPatientsPerDay" name="virtualPatientsPerDay" placeholder="Enter no. of appointments">
+                </div>
+                
+                <div class="form-group">
+                    <label for="virtualAvailabilityDays">Available Days for Virtual Appointments:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="virtualDays" value="Sunday"> Sunday</label>
+                        <label><input type="checkbox" name="virtualDays" value="Monday"> Monday</label>
+                        <label><input type="checkbox" name="virtualDays" value="Tuesday"> Tuesday</label>
+                        <label><input type="checkbox" name="virtualDays" value="Wednesday"> Wednesday</label>
+                        <label><input type="checkbox" name="virtualDays" value="Thursday"> Thursday</label>
+                        <label><input type="checkbox" name="virtualDays" value="Friday"> Friday</label>
+                        <label><input type="checkbox" name="virtualDays" value="Saturday"> Saturday</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="virtualAvailabilityFromTime">Virtual Availability Time (From):</label>
+                    <input type="time" id="virtualAvailabilityFromTime" name="virtualAvailabilityFromTime">
+                </div>
+                
+                <div class="form-group">
+                    <label for="virtualAvailabilityToTime">Virtual Availability Time (To):</label>
+                    <input type="time" id="virtualAvailabilityToTime" name="virtualAvailabilityToTime">
+                </div>
+            </div>
+
+            <!-- In-Person Appointments Section -->
+            <div id="inPersonAppointmentsSection" class="appointment-section" style="display: none;">
+                <h3>In-Person Appointments Settings</h3>
+                
+                <div class="form-group">
+                    <label for="inPersonPatientsPerDay">Number of In-Person Appointments Per Day:</label>
+                    <input type="number" id="inPersonPatientsPerDay" name="inPersonPatientsPerDay" placeholder="Enter no. of appointments">
+                </div>
+                
+                <div class="form-group">
+                    <label for="inPersonAvailabilityDays">Available Days for In-Person Appointments:</label>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="inPersonDays" value="Sunday"> Sunday</label>
+                        <label><input type="checkbox" name="inPersonDays" value="Monday"> Monday</label>
+                        <label><input type="checkbox" name="inPersonDays" value="Tuesday"> Tuesday</label>
+                        <label><input type="checkbox" name="inPersonDays" value="Wednesday"> Wednesday</label>
+                        <label><input type="checkbox" name="inPersonDays" value="Thursday"> Thursday</label>
+                        <label><input type="checkbox" name="inPersonDays" value="Friday"> Friday</label>
+                        <label><input type="checkbox" name="inPersonDays" value="Saturday"> Saturday</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inPersonAvailabilityFromTime">In-Person Availability Time (From):</label>
+                    <input type="time" id="inPersonAvailabilityFromTime" name="inPersonAvailabilityFromTime">
+                </div>
+                
+                <div class="form-group">
+                    <label for="inPersonAvailabilityToTime">In-Person Availability Time (To):</label>
+                    <input type="time" id="inPersonAvailabilityToTime" name="inPersonAvailabilityToTime">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="terms" name="terms" required>
+                    I agree to the <span onclick="openModal()" style="text-decoration: underline; cursor: pointer; color: #007bff;">Terms and Conditions</span>.
+                </label>
+            </div>
+            
+           <input type="submit" onclick="sendEmail()" value="Register">
+        </form>
+    </div>
+
+    <!-- Modal -->
+    <div id="overlay"></div>
+    <div id="termsModal">
+        <h2>Terms and Conditions</h2>
+        <p>
+            By registering as a doctor on our platform, you agree to the following terms:
+            <ul>
+                <li>You must provide accurate, complete, and up-to-date information during registration.</li>
+                <li>Any false or misleading information will result in immediate suspension or termination of your account.</li>
+                <li>You agree to maintain patient confidentiality and comply with data protection laws.</li>
+                <li>You are solely responsible for ensuring compliance with medical laws and regulations.</li>
+                <li>The platform is to be used solely for professional purposes, such as managing patient appointments and consultations.</li>
+                <li>Our platform acts as a facilitator and is not liable for any medical advice or services provided.</li>
+            </ul>
+        </p>
+        <p style="color: red; font-weight: bold;">
+            Warning: Providing false information may result in strict legal actions, including account suspension and reporting to medical authorities.
+        </p>
+        <button onclick="closeModal()">Close</button>
+    </div>
+
+    <script>
+        // Open Modal
+        function openModal() {
+            document.getElementById('termsModal').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('termsModal').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Toggle appointment sections based on checkbox selection
+        function toggleAppointmentSection(type) {
+            if (type === 'virtual') {
+                const checkbox = document.getElementById('virtualAppointments');
+                const section = document.getElementById('virtualAppointmentsSection');
+                
+                if (checkbox.checked) {
+                    section.style.display = 'block';
+                    
+                    // Make virtual fields required when checked
+                    document.getElementById('meetlink').required = true;
+                    document.getElementById('virtualPatientsPerDay').required = true;
+                    document.getElementById('virtualAvailabilityFromTime').required = true;
+                    document.getElementById('virtualAvailabilityToTime').required = true;
+                } else {
+                    section.style.display = 'none';
+                    
+                    // Remove required attribute when unchecked
+                    document.getElementById('meetlink').required = false;
+                    document.getElementById('virtualPatientsPerDay').required = false;
+                    document.getElementById('virtualAvailabilityFromTime').required = false;
+                    document.getElementById('virtualAvailabilityToTime').required = false;
+                }
+            } else if (type === 'inPerson') {
+                const checkbox = document.getElementById('inPersonAppointments');
+                const section = document.getElementById('inPersonAppointmentsSection');
+                
+                if (checkbox.checked) {
+                    section.style.display = 'block';
+                    
+                    // Make in-person fields required when checked
+                    document.getElementById('inPersonPatientsPerDay').required = true;
+                    document.getElementById('inPersonAvailabilityFromTime').required = true;
+                    document.getElementById('inPersonAvailabilityToTime').required = true;
+                } else {
+                    section.style.display = 'none';
+                    
+                    // Remove required attribute when unchecked
+                    document.getElementById('inPersonPatientsPerDay').required = false;
+                    document.getElementById('inPersonAvailabilityFromTime').required = false;
+                    document.getElementById('inPersonAvailabilityToTime').required = false;
+                }
+            }
+            
+            // Make sure at least one appointment type is selected
+            const virtualChecked = document.getElementById('virtualAppointments').checked;
+            const inPersonChecked = document.getElementById('inPersonAppointments').checked;
+            
+            // You can add validation here to ensure at least one type is selected
+            if (!virtualChecked && !inPersonChecked) 
+            {
+                alert('Please select at least one appointment type.');
+            }
+        }
+
+        // Simulate a loading delay
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.body.classList.add('loaded');
+            }, 1000);
+        });
+    </script>
+
+    
+</body>
+
+
+</html>

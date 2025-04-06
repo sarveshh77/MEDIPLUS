@@ -1,0 +1,650 @@
+
+      /* Header Styles */
+      header {
+          background: #eceef0;
+          color: black;
+          padding: 10px 0;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+      header .container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0 20px;
+          max-width: 1200px;
+          margin: 0 auto;
+      }
+      header .logo img {
+          max-height: 50px;
+      }
+      header nav ul {
+          list-style: none;
+          display: flex;
+          margin: 0;
+          padding: 0;
+      }
+      header nav ul li {
+          margin: 0 15px;
+      }
+      header nav ul li a {
+          color: rgb(20, 19, 19);
+          text-decoration: none;
+          font-size: 16px;
+      }
+      header nav ul li a:hover {
+          text-decoration: underline;
+          color: #007bff;
+      }
+    
+      :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3a0ca3;
+        --accent-color: #f72585;
+        --light-bg: #f8f9fa;
+        --dark-text: #2b2d42;
+        --light-text: #fff;
+        --border-radius: 10px;
+        --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+      }
+  
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--dark-text);
+        background-color: #edf2fb;
+        margin: 0;
+        padding: 0;
+      }
+  
+      .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 20px;
+      }
+  
+      .logout-btn {
+        padding: 0.5rem 1.2rem;
+        background-color: var(--accent-color);
+        color: white;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+  
+      .logout-btn:hover {
+        background-color: #d61a6e;
+        transform: translateY(-2px);
+      }
+  
+      .profile-header {
+        display: flex;
+        align-items: center;
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        transition: var(--transition);
+      }
+  
+      .profile-header:hover {
+        transform: translateY(-5px);
+      }
+  
+      .profile-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 4px solid var(--primary-color);
+        margin-right: 2rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+  
+      .profile-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+  
+      .profile-info {
+        flex: 1;
+      }
+  
+      .profile-info h1 {
+        margin-top: 0;
+        color: var(--primary-color);
+        font-size: 2.2rem;
+      }
+  
+      .profile-info p {
+        margin: 0.5rem 0;
+        display: flex;
+        align-items: center;
+      }
+  
+      .profile-info p i {
+        color: var(--primary-color);
+        margin-right: 10px;
+        width: 20px;
+      }
+  
+      .rating {
+        display: inline-flex;
+        align-items: center;
+        background-color: #fff8e6;
+        padding: 5px 10px;
+        border-radius: 50px;
+        font-weight: 600;
+        margin-top: 10px;
+      }
+  
+      .rating i {
+        color: #ffc107;
+        margin-right: 5px;
+      }
+  
+      .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+      }
+  
+      .profile-details, .appointments-section, .completed-appointments-section {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 2rem;
+        transition: var(--transition);
+      }
+  
+      .profile-details:hover, .appointments-section:hover, .completed-appointments-section:hover {
+        transform: translateY(-5px);
+  }
+
+  .detail-item {
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+  }
+
+  .detail-item i {
+    width: 24px;
+    margin-right: 1rem;
+    color: var(--primary-color);
+  }
+
+  .detail-label {
+    font-weight: 600;
+    margin-right: 0.5rem;
+    color: var(--secondary-color);
+  }
+
+  .map-link {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding: 0.8rem 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+        border-radius: 50px;
+        transition: var(--transition);
+      }
+
+      .map-link i {
+        margin-right: 8px;
+      }
+
+      .map-link:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        color: var(--secondary-color);
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background-color: var(--accent-color);
+        border-radius: 2px;
+      }
+
+      .section-title i {
+        margin-right: 10px;
+      }
+
+      .calendar-section {
+        margin-bottom: 2rem;
+      }
+
+      .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+
+      .calendar-controls button {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: var(--primary-color);
+        transition: var(--transition);
+      }
+
+      .calendar-controls button:hover {
+        color: var(--secondary-color);
+        transform: scale(1.1);
+      }
+
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+      }
+
+      .calendar-day {
+        text-align: center;
+        padding: 0.5rem;
+        font-weight: 600;
+        color: var(--secondary-color);
+      }
+
+      .calendar-date {
+        text-align: center;
+        padding: 0.8rem 0;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .calendar-date:hover {
+        background-color: #e6f2ff;
+        transform: scale(1.05);
+      }
+
+      .calendar-date.active {
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: 600;
+        transform: scale(1.05);
+      }
+
+      .calendar-date.unavailable {
+        color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .appointments-list, .completed-appointments-list {
+        margin-top: 2rem;
+        max-height: 400px;
+        overflow-y: auto;
+      }
+
+      .appointment-card {
+        background-color: #f8f9fa;
+        border-left: 4px solid var(--primary-color);
+        border-radius: var(--border-radius);
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+        transition: var(--transition);
+      }
+
+      .appointment-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .appointment-card.virtual {
+        border-left-color: #4cc9f0;
+      }
+
+      .appointment-card.in-person {
+        border-left-color: #4361ee;
+      }
+
+      .appointment-card.completed {
+        border-left-color: #4caf50;
+        opacity: 0.8;
+      }
+
+      .appointment-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.8rem;
+      }
+
+      .appointment-type {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        color: var(--primary-color);
+      }
+
+      .appointment-type i {
+        margin-right: 8px;
+      }
+
+      .appointment-time {
+        font-weight: 600;
+        color: var(--dark-text);
+      }
+
+      .appointment-patient {
+        display: flex;
+        align-items: center;
+        color: var(--dark-text);
+      }
+
+      .appointment-patient i {
+        margin-right: 8px;
+        color: var(--primary-color);
+      }
+
+      .appointment-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 1rem;
+      }
+
+      .appointment-actions button {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: var(--transition);
+      }
+
+      .join-btn {
+        background-color: #4cc9f0;
+        color: white;
+      }
+
+      .join-btn:hover {
+        background-color: #3a97b7;
+      }
+
+      .complete-btn {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .complete-btn:hover {
+        background-color: #3d8b40;
+      }
+
+      .no-appointments {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+        font-style: italic;
+      }
+
+      /* Prescription Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        overflow: auto;
+      }
+
+      .modal-content {
+        background-color: #fefefe;
+        margin: 10% auto;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        width: 80%;
+        max-width: 600px;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .modal-header h2 {
+        color: var(--primary-color);
+        margin: 0;
+      }
+
+      .close-btn {
+        color: #aaa;
+        font-size: 1.5rem;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .close-btn:hover {
+        color: var(--dark-text);
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--secondary-color);
+      }
+
+      .form-group input,
+      .form-group textarea,
+      .form-group select {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        font-family: inherit;
+      }
+
+      .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .medication-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .medication-row input {
+        flex: 1;
+      }
+
+      .add-medication {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        margin-bottom: 1rem;
+      }
+
+      .add-medication:hover {
+        background-color: var(--secondary-color);
+      }
+
+      .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 1.5rem;
+      }
+
+      .modal-footer button {
+        padding: 0.7rem 1.5rem;
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .skip-btn {
+        background-color: #f44336;
+        color: white;
+      }
+
+      .skip-btn:hover {
+        background-color: #d32f2f;
+      }
+
+      .submit-btn {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      .submit-btn:hover {
+        background-color: #388e3c;
+      }
+
+      @media (max-width: 768px) {
+        .profile-grid {
+          grid-template-columns: 1fr;
+        }
+        
+        .profile-header {
+          flex-direction: column;
+          text-align: center;
+        }
+        
+        .profile-image {
+          margin-right: 0;
+          margin-bottom: 1rem;
+        }
+        
+        header .container {
+          flex-direction: column;
+        }
+        
+        header nav ul {
+          margin-top: 15px;
+        }
+
+        .modal-content {
+          width: 95%;
+          margin: 20% auto;
+        }
+      }	
+        
+/* Add to your existing styles */
+/* Add to your existing styles */
+.loading-spinner {
+    text-align: center;
+    padding: 2rem;
+    color: var(--primary-color);
+  }
+  
+  .appointment-card.completed {
+    margin-bottom: 1.5rem;
+    border-left: 4px solid #4caf50;
+  }
+  
+  .appointment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.8rem;
+  }
+  
+  .appointment-meta {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .appointment-date, .completion-time {
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .prescription-details {
+    background-color: #f5f5f5;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: var(--border-radius);
+  }
+  
+  .prescription-details h4 {
+    margin-top: 0;
+    color: var(--secondary-color);
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.5rem;
+  }
+  
+  .medication {
+    padding: 0.5rem;
+    margin: 0.3rem 0;
+    background-color: white;
+    border-radius: 4px;
+  }
+  
+  .error-message {
+    text-align: center;
+    padding: 2rem;
+    color: #d32f2f;
+  }
+  
+  .retry-btn {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+  }
+  /* Add to your existing styles */
+.appointment-details {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border-radius: var(--border-radius);
+  }
+  
+  .error-detail {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0.5rem 0;
+  }
+  
+  .medications-list {
+    margin: 0.5rem 0;
+  }
+  
+  .loading-spinner i {
+    margin-right: 0.5rem;
+  } 

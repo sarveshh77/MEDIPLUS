@@ -1,0 +1,657 @@
+<html>
+    <head>
+        <script type="module" src="{{ url_for('static', filename='js/bookappointment.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/bookappointment.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/checkAvailability.js') }}"></script>
+        <!-- Favicon -->
+        <link rel="icon" href="../static/img/favicon.png">
+		
+		
+		<link rel="stylesheet" href="../static/css/bootstrap.min.css">
+		<link rel="stylesheet" href="../static/css/nice-select.css">
+		<link rel="stylesheet" href="../static/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../static/css/icofont.css">
+		<link rel="stylesheet" href="../static/css/slicknav.min.css">
+		<link rel="stylesheet" href="../static/css/owl-carousel.css">
+		<link rel="stylesheet" href="../static/css/datepicker.css">
+		<link rel="stylesheet" href="../static/css/animate.min.css">
+		<link rel="stylesheet" href="../static/css/magnific-popup.css">e
+		<link rel="stylesheet" href="../static/css/normalize.css">
+		<link rel="stylesheet" href="../static/css/style.css">
+		<link rel="stylesheet" href="../static/css/responsive.css">
+
+		<script type="module" src="bookappointment.js"></script>
+    </head>
+    <body>
+        <style>
+			html {
+				scroll-behavior: smooth;
+			}
+		</style>
+		<style>
+			html {
+				scroll-behavior: smooth;
+			}
+		
+			/* Style for dropdown container */
+			.dropdown {
+				position: relative;
+			}
+			
+			
+			/* Initially hide the dropdown menu */
+			.dropdown-menu {
+				display: none;
+				position: absolute;
+				top: 100%;
+				left: 0;
+				background-color: #fff;
+				border: 1px solid #ccc;
+				border-radius: 5px;
+				padding: 10px;
+				width: 150px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+				z-index: 1000;
+			}
+		
+			/* Show the dropdown menu on hover */
+			.dropdown:hover .dropdown-menu {
+				display: block;
+			}
+		
+            /* Add these styles to your existing CSS */
+.nav-tabs {
+    border-bottom: 2px solid #007bff;
+    margin-bottom: 20px;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #495057;
+    font-weight: 500;
+    padding: 12px 25px;
+}
+
+.nav-tabs .nav-link.active {
+    color: #007bff;
+    background-color: transparent;
+    border-bottom: 3px solid #007bff;
+}
+
+.nav-tabs .nav-link:hover:not(.active) {
+    border-bottom: 3px solid rgba(0, 123, 255, 0.3);
+}
+
+.tab-content {
+    padding: 20px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .nav-tabs .nav-link {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+}
+			/* Style for dropdown items */
+			.dropdown-item {
+				display: block;
+				padding: 8px;
+				color: #007bff;
+				text-decoration: none;
+				font-size: 14px;
+			}
+		
+			/* Hover effect for dropdown items */
+			.dropdown-item:hover {
+				background-color: #f0f0f0;
+				color: #0056b3;
+			}
+		
+			/* Style for button hover */
+			.btn:hover {
+				background-color: #0056b3;
+				color: white;
+			}
+			footer {
+				background-color: #007bff; /* Set footer background to #007bff */
+				text-align: center;
+				padding: 10px 0; /* Smaller padding for a smaller footer */
+			}
+			
+			footer p {
+				color: white; /* Set the text color of the paragraph inside footer to white */
+				margin: 0; /* Remove any default margin */
+			}
+			
+		</style>
+		
+    <!-- Replace your current form section with this: -->
+<!-- Replace your entire form section with this: -->
+<section class="appointment" id="appointment">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <h2>We Are Always Ready to Help You. Book An Appointment</h2>
+                    <img src="../static/img/section-img.png" alt="#">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Navigation Tabs -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <ul class="nav nav-tabs" id="formTabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="patient-tab" data-toggle="tab" href="#patient-info">Patient Information</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="appointment-tab" data-toggle="tab" href="#appointment-details">Appointment Details</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-12">
+                <form class="form" id="appointmentForm">
+                    <div class="tab-content">
+                        <!-- Patient Information Tab -->
+                        <div class="tab-pane fade show active" id="patient-info">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="username">Username</label>
+                                        <input type="text" id="username" placeholder="Enter your username">
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="name">Name</label>
+                                        <input type="text" id="name" placeholder="Enter your name">
+                                    </div>
+                                </div>
+        
+                                {# <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="mail">Mail</label>
+                                        <input type="email" id="mail" placeholder="Enter your email">
+                                    </div>
+                                </div> #}
+        
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="age">Age</label>
+                                        <input type="number" id="age" placeholder="Enter your age">
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="gender">Gender</label>
+                                        <select id="gender">
+                                            <option value="">Select Gender</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="country">Country</label>
+                                        <select id="country">
+                                            <option value="">Select Country</option>
+                                            <option value="Australia">Australia</option>
+                                            <option value="Canada">Canada</option>
+                                            <option value="Germany">Germany</option>
+                                            <option value="India">India</option>
+                                            <option value="Japan">Japan</option>
+                                            <option value="Malaysia">Malaysia</option>
+                                            <option value="Mexico">Mexico</option>
+                                            <option value="Saudi Arabia">Saudi Arabia</option>
+                                            <option value="Singapore">Singapore</option>
+                                            <option value="South Korea">South Korea</option>
+                                            <option value="Thailand">Thailand</option>
+                                            <option value="Turkey">Turkey</option>
+                                            <option value="United Arab Emirates">United Arab Emirates</option>
+                                            <option value="United Kingdom">United Kingdom</option>
+                                            <option value="United States">United States</option>
+                                        </select>
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-12 col-md-12 col-12">
+                                    <div class="form-group">
+                                        <label for="symptoms">Symptoms</label>
+                                        <div id="symptomInputContainer"></div>
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-12 col-md-12 col-12">
+                                    <div class="form-group">
+                                        <label for="days">From how many days you have these symptoms? (Optional)</label>
+                                        <select id="days">
+                                            <option value="">Select Days</option>
+                                            <option value="5 days">5 Days</option>
+                                            <option value="10 days">10 Days</option>
+                                            <option value="15 days">15 Days</option>
+                                            <option value="20 days">20 Days</option>
+                                            <option value="25 days">25 Days</option>
+                                            <option value="30 days">30 Days</option>
+                                        </select>
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-12 col-md-12 col-12">
+                                    <div class="form-group">
+                                        <label for="chronicDisease">Chronic Disease (Optional)</label>
+                                        <input type="text" id="chronicDisease" placeholder="Enter Yes or No if any chronic disease" autocapitalize="none" autocorrect="off" spellcheck="false">
+                                    </div>
+                                </div>
+        
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    <div class="form-group">
+                                        <label for="language">Preferred Language</label>
+                                        <select id="language">
+                                            <option value="">Select Language</option>
+                                            <option value="english">English</option>
+                                            <option value="hindi">Hindi</option>
+                                            <option value="spanish">Marathi</option>
+                                        </select>
+                                    </div>
+                                </div>
+        
+                                <div class="col-12 text-right">
+                                    <button type="button" class="btn btn-primary next-tab" data-target="#appointment-details">Next: Appointment Details</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Appointment Details Tab -->
+                        <div class="tab-pane fade" id="appointment-details">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-12">
+                                    <div class="form-group">
+                                        <label for="appointmentDate">Appointment Date</label>
+                                        <input type="date" id="appointmentDate" placeholder="Select appointment date">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-12">
+                                    <div class="form-group">
+                                        <label for="appointmentTime">Appointment Time</label>
+                                        <input type="time" id="appointmentTime" placeholder="Select appointment time">
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-12">
+                                    <div class="form-group">
+                                        <label>Consultation Preference?</label>
+                                        <div class="radio-group" style="display: flex; gap: 30px; align-items: center; font-size: 16px;">
+                                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                                <input type="radio" name="consultationPref" value="in-person" style="width: 20px; height: 20px;"> In-Person
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                                <input type="radio" name="consultationPref" value="virtual" style="width: 20px; height: 20px;"> Virtual
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-12 col-md-12 col-12">
+                                    <div class="form-group">
+                                        <label>Doctor Selection</label>
+                                        <div class="radio-group" style="display: flex; gap: 30px; align-items: center; font-size: 16px;">
+                                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                                <input type="radio" name="doctorSelect" value="manual" onclick="redirectToDoctors()" style="width: 20px; height: 20px;"> Manual
+                                            </label>
+                                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                                <input type="radio" name="doctorSelect" value="auto" onclick="redirectToNearestDoctor()" style="width: 20px; height: 20px;"> Auto
+                                            </label>
+                                        </div>
+                                        <input type="text" id="manualDoctor" class="autocomplete" placeholder="Enter doctor name" style="display: none; margin-top: 10px; font-size: 16px; padding: 8px;">
+                                        <ul id="autocompleteList" class="autocomplete-list"></ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 text-right">
+                                    <button type="button" class="btn btn-secondary mr-2 prev-tab" data-target="#patient-info">Back to Patient Info</button>
+                                    <button type="submit" class="btn btn-primary">Book Appointment</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+    <script>
+        const symptomInputContainer = document.getElementById('symptomInputContainer');
+        const symptomsList = ["itching", "skin_rash", "nodal_skin_eruptions", "continuous_sneezing", "shivering", "chills", "joint_pain", "stomach_pain", "acidity", "ulcers_on_tongue", "muscle_wasting", "vomiting", "burning_micturition", "spotting_urination", "fatigue", "weight_gain", "anxiety", "cold_hands_and_feets", "mood_swings", "weight_loss", "restlessness", "lethargy", "patches_in_throat", "irregular_sugar_level", "cough", "high_fever", "sunken_eyes", "breathlessness", "sweating", "dehydration", "indigestion", "headache", "yellowish_skin", "dark_urine", "nausea", "loss_of_appetite", "pain_behind_the_eyes", "back_pain", "constipation", "abdominal_pain", "diarrhoea", "mild_fever", "yellow_urine", "yellowing_of_eyes", "acute_liver_failure", "fluid_overload", "swelling_of_stomach", "swelled_lymph_nodes", "malaise", "blurred_and_distorted_vision", "phlegm", "throat_irritation", "redness_of_eyes", "sinus_pressure", "runny_nose", "congestion", "chest_pain", "weakness_in_limbs", "fast_heart_rate", "pain_during_bowel_movements", "pain_in_anal_region", "bloody_stool", "irritation_in_anus", "neck_pain", "dizziness", "cramps", "bruising", "obesity", "swollen_legs", "swollen_blood_vessels", "puffy_face_and_eyes", "enlarged_thyroid", "brittle_nails", "swollen_extremeties", "excessive_hunger", "extra_marital_contacts", "drying_and_tingling_lips", "slurred_speech", "knee_pain", "hip_joint_pain", "muscle_weakness", "stiff_neck", "swelling_joints", "movement_stiffness", "spinning_movements", "loss_of_balance", "unsteadiness", "weakness_of_one_body_side", "loss_of_smell", "bladder_discomfort", "foul_smell_ofurine", "continuous_feel_of_urine", "passage_of_gases", "internal_itching", "toxic_look_(typhos)", "depression", "irritability", "muscle_pain", "altered_sensorium", "red_spots_over_body", "belly_pain", "abnormal_menstruation", "dischromic_patches", "watering_from_eyes", "increased_appetite", "polyuria", "family_history", "mucoid_sputum", "rusty_sputum", "lack_of_concentration", "visual_disturbances", "receiving_blood_transfusion", "receiving_unsterile_injections", "coma", "stomach_bleeding", "distention_of_abdomen", "history_of_alcohol_consumption", "fluid_overload", "blood_in_sputum", "prominent_veins_on_calf", "palpitations", "painful_walking", "pus_filled_pimples", "blackheads", "scurring", "skin_peeling", "silver_like_dusting", "small_dents_in_nails", "inflammatory_nails", "blister", "red_sore_around_nose", "yellow_crust_ooze", "prognosis"];
+    
+        let selectedSymptoms = [];
+    
+        function renderSymptoms() {
+            symptomInputContainer.innerHTML = `
+                <div class="input-group">
+                    <input type="text" id="symptomInput" placeholder="Enter a symptom" list="symptomSuggestions" />
+                    <datalist id="symptomSuggestions">
+                        ${symptomsList.map(symptom => `<option value="${symptom}"></option>`).join('')}
+                    </datalist>
+                    <button type="button" onclick="addSymptom()">Add</button>
+                </div>
+                <ul>
+                    ${selectedSymptoms.map(symptom => `
+                        <li>
+                            ${symptom}
+                            <button type="button" onclick="removeSymptom('${symptom}')">Remove</button>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+        }
+        function addSymptom() {
+            const symptom = document.getElementById('symptomInput').value.trim();
+            if (symptom && !selectedSymptoms.includes(symptom)) {
+                selectedSymptoms.push(symptom);
+                renderSymptoms();
+                saveFormData(); // Persist immediately
+            }
+        }
+    
+        function removeSymptom(symptom) {
+            const index = selectedSymptoms.indexOf(symptom);
+            if (index >= 0) {
+                selectedSymptoms.splice(index, 1);
+                renderSymptoms();
+                saveFormData(); // Persist immediately
+            }
+        }
+            function toggleAddress(show) {
+            document.getElementById("address-field").style.display = show ? "block" : "none";
+        }
+             function submitData() {
+             let daysText = document.getElementById("days").value;
+             let days = daysText ? parseInt(daysText) : 0;
+             let chronicDiseaseText = document.getElementById("chronicDisease").value.trim().toLowerCase();
+             let chronic_disease = (chronicDiseaseText === "yes"); 
+                fetch('/calculate_severity', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ symptoms: selectedSymptoms, days:days, chronic_disease: chronic_disease })
+                })
+                .then(response => response.json())
+                .then(data => {
+            
+                    document.getElementById("result").innerHTML = `
+                        <p><strong>Severity:</strong> ${data.severity_score}</p>
+                        
+                    `;
+                })
+                .catch(error => console.error('Error:', error));
+            }
+    
+        // Initial render
+        renderSymptoms();
+    </script>
+    <!-- End Appointment -->
+    
+    <script>
+               // Tab Navigation Logic
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle next/previous tab buttons
+    document.querySelectorAll('.next-tab').forEach(button => {
+        button.addEventListener('click', function() {
+            saveFormData();
+            const targetTab = this.getAttribute('data-target');
+            document.querySelector('.nav-tabs a[href="' + targetTab + '"]').click();
+        });
+    });
+
+    document.querySelectorAll('.prev-tab').forEach(button => {
+        button.addEventListener('click', function() {
+            saveFormData();
+            const targetTab = this.getAttribute('data-target');
+            document.querySelector('.nav-tabs a[href="' + targetTab + '"]').click();
+        });
+    });
+
+    // Initialize form data if available
+    restoreFormData();
+});
+
+
+// Save form data to localStorage
+function saveFormData() {
+    const formData = {
+        // Patient Information
+        username: document.getElementById('username').value,
+        name: document.getElementById('name').value,
+        age: document.getElementById('age').value,
+        gender: document.getElementById('gender').value,
+        country: document.getElementById('country').value,
+        symptoms: selectedSymptoms,
+        days: document.getElementById('days').value,
+        chronicDisease: document.getElementById('chronicDisease').value,
+        
+        // Appointment Details
+        appointmentDate: document.getElementById('appointmentDate').value,
+        appointmentTime: document.getElementById('appointmentTime').value,
+        consultationPref: document.querySelector('input[name="consultationPref"]:checked')?.value,
+        doctorSelect: document.querySelector('input[name="doctorSelect"]:checked')?.value,
+        manualDoctor: document.getElementById('manualDoctor').value,
+        language: document.getElementById('language').value
+    };
+    
+    localStorage.setItem('appointmentFormData', JSON.stringify(formData));
+}
+
+// Restore form data from localStorage
+function restoreFormData() {
+    const savedData = localStorage.getItem('appointmentFormData');
+    if (savedData) {
+        const formData = JSON.parse(savedData);
+
+        
+        
+        // Restore Patient Information
+        document.getElementById('username').value = formData.username || '';
+        document.getElementById('name').value = formData.name || '';
+        document.getElementById('age').value = formData.age || '';
+        document.getElementById('gender').value = formData.gender || '';
+        document.getElementById('country').value = formData.country || '';
+        document.getElementById('days').value = formData.days || '';
+        document.getElementById('chronicDisease').value = formData.chronicDisease || '';
+        
+        // Restore Symptoms
+        if (formData.symptoms && formData.symptoms.length > 0) {
+            selectedSymptoms = formData.symptoms;
+            renderSymptoms();
+        }
+        
+        // Restore Appointment Details
+        document.getElementById('appointmentDate').value = formData.appointmentDate || '';
+        document.getElementById('appointmentTime').value = formData.appointmentTime || '';
+        document.getElementById('language').value = formData.language || '';
+        
+        if (formData.consultationPref) {
+            document.querySelector(`input[name="consultationPref"][value="${formData.consultationPref}"]`).checked = true;
+        }
+        
+        if (formData.doctorSelect) {
+            document.querySelector(`input[name="doctorSelect"][value="${formData.doctorSelect}"]`).checked = true;
+            toggleDoctorInput();
+        }
+        
+        if (formData.manualDoctor) {
+            document.getElementById('manualDoctor').value = formData.manualDoctor;
+        }
+    }
+}
+
+// Clear saved data on successful submission
+document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    submitData();
+    localStorage.removeItem('appointmentFormData');
+});
+
+// Modified redirect functions to maintain data
+
+        // Toggle manual doctor input field visibility
+        function toggleDoctorInput() {
+            const manualDoctorInput = document.getElementById('manualDoctor');
+            const doctorSelection = document.querySelector('input[name="doctorSelect"]:checked').value;
+            manualDoctorInput.style.display = (doctorSelection === 'manual') ? 'block' : 'none';
+        }
+    </script>
+            <!-- Footer Area -->
+            <footer>
+                <p>&copy; 2024 Telimidicine</p>
+            </footer>
+            <!--/ End Footer Area -->
+            
+            <!-- jquery Min JS -->
+            <script src="../static/js/jquery.min.js"></script>
+            <!-- jquery Migrate JS -->
+            <script src="../static/js/jquery-migrate-3.0.0.js"></script>
+            <!-- jquery Ui JS -->
+            <script src="../static/js/jquery-ui.min.js"></script>
+            <!-- Easing JS -->
+            <script src="../static/js/easing.js"></script>
+            <!-- Color JS -->
+            <script src="../static/js/colors.js"></script>
+            <!-- Popper JS -->
+            <script src="../static/js/popper.min.js"></script>
+            <!-- Bootstrap Datepicker JS -->
+            <script src="../static/js/bootstrap-datepicker.js"></script>
+            <!-- Jquery Nav JS -->
+            <script src="../static/js/jquery.nav.js"></script>
+            <!-- Slicknav JS -->
+            <script src="../static/js/slicknav.min.js"></script>
+            <!-- ScrollUp JS -->
+            <script src="../static/js/jquery.scrollUp.min.js"></script>
+            <!-- Niceselect JS -->
+            <script src="../static/js/niceselect.js"></script>
+            <!-- Tilt Jquery JS -->
+            <script src="../static/js/tilt.jquery.min.js"></script>
+            <!-- Owl Carousel JS -->
+            <script src="../static/js/owl-carousel.js"></script>
+            <!-- counterup JS -->
+            <script src="../static/js/jquery.counterup.min.js"></script>
+            <!-- Steller JS -->
+            <script src="../static/js/steller.js"></script>
+            <!-- Wow JS -->
+            <script src="../static/js/wow.min.js"></script>
+            <!-- Magnific Popup JS -->
+            <script src="../static/js/jquery.magnific-popup.min.js"></script>
+            <!-- Counter Up CDN JS -->
+            <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+            <!-- Bootstrap JS -->
+            <script src="../static/js/bootstrap.min.js"></script>
+            <!-- Main JS -->
+            <script src="../static/js/main.js"></script>
+        </body>
+    </html>
+    <script>
+        const doctorNames = ["Dr. Akther Hossain", "Dr. Dery Alex", "Dr. Jovis Karon", "Dr. Priya Mehta", "Dr. Anand Kumar"];
+        const manualDoctorInput = document.getElementById("manualDoctor");
+        const autocompleteList = document.getElementById("autocompleteList");
+    
+        manualDoctorInput.addEventListener("input", function () {
+            const query = this.value.toLowerCase();
+            autocompleteList.innerHTML = ""; // Clear previous suggestions
+    
+            if (query) {
+                const filteredNames = doctorNames.filter(name => name.toLowerCase().includes(query));
+                filteredNames.forEach(name => {
+                    const suggestionItem = document.createElement("li");
+                    suggestionItem.textContent = name;
+                    suggestionItem.addEventListener("click", function () {
+                        manualDoctorInput.value = name; // Set the selected value
+                        autocompleteList.innerHTML = ""; // Clear suggestions
+                    });
+                    autocompleteList.appendChild(suggestionItem);
+                });
+            }
+        });
+    
+        // Hide suggestions when clicking outside
+        document.addEventListener("click", function (e) {
+            if (!manualDoctorInput.contains(e.target) && !autocompleteList.contains(e.target)) {
+                autocompleteList.innerHTML = "";
+            }
+        });
+    
+        
+    </script>
+    <script>
+        
+    window.onload = () => {
+        if (sessionStorage.getItem("scrollToAppointment") === "true") {
+            sessionStorage.removeItem("scrollToAppointment"); // Remove flag
+            document.getElementById("appointment").scrollIntoView({ behavior: "smooth" });
+            const selectedDoctor = sessionStorage.getItem("selectedDoctor");
+            const specialization = sessionStorage.getItem("selectedSpecialization");
+    
+            if (selectedDoctor) {
+                document.querySelector('input[name="doctorSelect"][value="manual"]').checked = true;
+                document.getElementById("manualDoctor").value = selectedDoctor;
+    
+                const manualDoctorInput = document.getElementById('manualDoctor');
+                manualDoctorInput.style.display = 'block'; 
+            }
+    
+    
+        }
+        // Restore Symptoms
+        const storedSymptoms = sessionStorage.getItem("symptoms");
+        if (storedSymptoms) {
+            selectedSymptoms.push(...storedSymptoms.split(", "));
+            renderSymptoms();
+        }
+    };
+    const doc = "doctors";
+    function redirectToDoctors() {
+        saveFormData();
+        window.location.href = doc;
+    }
+   
+    const doc1 = "NearestDoctor"
+    function redirectToNearestDoctor() {
+        saveFormData(); // Save first
+        
+        let daysText = document.getElementById("days").value;
+        let days = daysText ? parseInt(daysText) : 0;
+        let chronicDiseaseText = document.getElementById("chronicDisease").value.trim().toLowerCase();
+        let chronic_disease = (chronicDiseaseText === "yes"); 
+        
+        fetch('/calculate_severity', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                symptoms: selectedSymptoms, 
+                days: days, 
+                chronic_disease: chronic_disease 
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("result").innerHTML = `
+                <p><strong>Severity:</strong> ${data.severity_score}</p>
+            `;
+            window.location.href = "NearestDoctor"; // Redirect AFTER fetch completes
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            window.location.href = "NearestDoctor"; // Still redirect even if error
+        });
+    }
+    </script>
+    
+</html>

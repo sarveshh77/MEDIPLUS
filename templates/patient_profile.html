@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Appointments | Healthcare Portal</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.7.3/sweetalert2.all.min.js"></script>
+   
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            color: white !important;
+        }
+        
+        .profile-header {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .profile-image {
+            background-color: var(--light-color);
+            border: 5px solid var(--primary-color);
+            height: 100px;
+            width: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+        }
+        
+        .profile-image i {
+            font-size: 50px;
+            color: var(--dark-color);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 15px 20px;
+        }
+        
+        .appointment-card {
+            background-color: white;
+            border-left: 4px solid var(--primary-color);
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .appointment-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-badge {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .status-upcoming {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-completed {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-inqueue {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .queue-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .queue-info {
+            background-color: #e3f2fd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logout-btn {
+            cursor: pointer;
+        }
+        
+        .tab-content {
+            padding: 20px 0;
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+            border-bottom: 3px solid var(--primary-color);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #dee2e6;
+        }
+        
+        .btn-book {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+        
+        .btn-book:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .doctor-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+        
+        .doctor-avatar i {
+            font-size: 20px;
+            color: var(--dark-color);
+        }
+        
+        @media (max-width: 768px) {
+            .profile-image {
+                height: 80px;
+                width: 80px;
+            }
+            
+            .profile-image i {
+                font-size: 40px;
+            }
+            
+            .queue-number {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-hospital-user me-2"></i>
+                Healthcare Portal
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-calendar-alt me-1"></i> Appointments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#past"><i class="fas fa-file-medical me-1"></i> Medical Records</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="row align-items-center">
+                <div class="col-md-2 text-center">
+                    <div class="profile-image">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4 id="userName" class="mb-1">Loading...</h4>
+                    <p class="text-muted mb-2" id="userEmail">Loading...</p>
+                    <span class="badge bg-light text-dark"><i class="fas fa-id-card me-1"></i> Country: <span id="patientId">--</span></span>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a href="{{ url_for('Bookappointment') }}" class="btn btn-book">
+                        <i class="fas fa-calendar-plus me-1"></i> Book Appointment
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Queue Status 
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-user-clock me-2"></i> Current Queue Status
+            </div>
+            <div class="card-body">
+                <div id="currentQueueContainer">
+                    <div class="queue-info">
+                        <div class="text-center mb-2">
+                            <i class="fas fa-clipboard-list fa-2x mb-2" style="color: var(--primary-color);"></i>
+                            <h5>Your Current Queue Position</h5>
+                        </div>
+                        <div class="queue-number" id="queueNumber">--</div>
+                        <div class="text-center">
+                            <p class="mb-1" id="queueDoctor">Doctor: --</p>
+                            <p class="mb-1" id="queueDepartment">Specialist: --</p>
+                            <p class="mb-0" id="queueWaitTime">Estimated wait time: --</p> 
+                        </div>
+                    </div>
+                    <div class="text-center mt-3">
+                        <button class="btn btn-outline-primary me-2">
+                            <i class="fas fa-sync-alt me-1"></i> Refresh Status
+                        </button>
+                        <button class="btn btn-outline-danger">
+                            <i class="fas fa-times me-1"></i> Leave Queue
+                        </button>
+                    </div>
+                </div>
+                <div id="noQueueMessage" class="empty-state" style="display: none;">
+                    <i class="fas fa-user-clock"></i>
+                    <h5>No Current Queue</h5>
+                    <p>You're not currently in any queue. Book an appointment to join a queue.</p>
+                    <a href="{{ url_for('Bookappointment') }}" class="btn btn-book mt-2">
+                        <i class="fas fa-calendar-plus me-1"></i> Book Appointment
+                    </a>
+                </div>K
+            </div>
+        </div>-->
+
+        <!-- Appointments Tabs -->
+        <div class="card">
+            <div class="card-header">
+                <ul class="nav nav-tabs card-header-tabs" id="appointmentTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="upcoming-tab" data-bs-toggle="tab" data-bs-target="#upcoming" type="button" role="tab">
+                            <i class="fas fa-calendar-check me-1"></i> Upcoming Appointments
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="past-tab" data-bs-toggle="tab" data-bs-target="#past" type="button" role="tab">
+                            <i class="fas fa-history me-1"></i> Past Appointments
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-body p-0">
+                <div class="tab-content" id="appointmentTabsContent">
+                    <!-- Upcoming Appointments Tab -->
+                    <div class="tab-pane fade show active" id="upcoming" role="tabpanel">
+                        <div id="upcomingAppointmentsContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-plus"></i>
+                                <h5>No Upcoming Appointments</h5>
+                                <p>You don't have any scheduled appointments right now.</p>
+                                <a href="{{ url_for('Bookappointment') }}" class="btn btn-book mt-2">
+                                    <i class="fas fa-calendar-plus me-1"></i> Book Appointment
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Past Appointments Tab -->
+                    <div class="tab-pane fade" id="past" role="tabpanel">
+                        <div id="pastAppointmentsContainer">
+                            <div class="empty-state">
+                                <i class="fas fa-history"></i>
+                                <h5>No Past Appointments</h5>
+                                <p>Your past appointments will appear here.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <h5>Healthcare Portal</h5>
+                    <p class="small">Providing quality healthcare services and patient management.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h5>Need Help?</h5>
+                    <p class="small">
+                        <i class="fas fa-phone me-2"></i> (123) 456-7890<br>
+                        <i class="fas fa-envelope me-2"></i> support@healthcareportal.com
+                    </p>
+                </div>
+            </div>
+            <div class="text-center pt-3 border-top border-secondary">
+                <p class="small text-white-50">&copy; 2025 Healthcare Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Scripts -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore.js";
+
+        // Firebase configuration (same as in your existing code)
+        //const firebaseConfig = {
+         //   apiKey: "YOUR_API_KEY",
+         //   authDomain: "YOUR_AUTH_DOMAIN",
+         //   projectId: "YOUR_PROJECT_ID",
+        //    storageBucket: "YOUR_STORAGE_BUCKET",
+        //    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        //    appId: "YOUR_APP_ID"
+       // };
+
+        // Initialize Firebase
+      //  const app = initializeApp(firebaseConfig);
+     //   const db = getFirestore(app);
+
+        // Check if the user is logged in
+        document.getElementById("logoutBtn").addEventListener("click", function(event) {
+            event.preventDefault();  // Prevent default link behavior
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You will be logged out!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Logout"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "{{ url_for('LoginPatient') }}"; // Redirect to Flask logout route
+                }
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for user in session storage
+            const userDataStr = sessionStorage.getItem('currentUser');
+            
+            if (!userDataStr) {
+                // No user found, redirect to login page
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Session Expired',
+                    text: 'Please log in to access your profile.',
+                    confirmButtonText: 'Go to Login'
+                }).then(() => {
+                    window.location.href = '/LoginPatient';
+                });
+                return;
+            }
+            
+            // Parse user data
+            const userData = JSON.parse(userDataStr);
+            
+            // Populate user profile information
+            populateUserProfile(userData);
+            
+            // Set up logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                // Clear session storage
+                sessionStorage.removeItem('currentUser');
+                console.log("lol");
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Logged Out',
+                    text: 'You have been successfully logged out.',
+                    timer: 1500,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = '/LoginPatient';
+                });
+            });
+        });
+
+        // Function to populate user profile with data
+        function populateUserProfile(userData) {
+            // Populate the header
+            document.getElementById('userName').textContent = userData.name;
+            document.getElementById('userEmail').textContent = userData.email;
+            document.getElementById('patientId').textContent = userData.country || '--';
+            
+            // Check if user has queue information
+            if (userData.currentQueue) {
+                document.getElementById('queueNumber').textContent = userData.currentQueue.position || '--';
+                document.getElementById('queueDoctor').textContent = `Doctor: ${userData.currentQueue.doctor || '--'}`;
+                document.getElementById('queueDepartment').textContent = `Department: ${userData.currentQueue.department || '--'}`;
+                document.getElementById('queueWaitTime').textContent = `Estimated wait time: ${userData.currentQueue.waitTime || '--'}`;
+                document.getElementById('noQueueMessage').style.display = 'none';
+                document.getElementById('currentQueueContainer').style.display = 'block';
+            } else {
+                document.getElementById('noQueueMessage').style.display = 'block';
+                document.getElementById('currentQueueContainer').style.display = 'none';
+            }
+            
+            // Check if user has appointments
+            if (userData.appointments && userData.appointments.length > 0) {
+                // Separate upcoming and past appointments
+                const now = new Date();
+                const upcomingAppointments = [];
+                const pastAppointments = [];
+                
+                userData.appointments.forEach(appointment => {
+                    const appointmentDate = new Date(appointment.date);
+                    if (appointmentDate > now) {
+                        upcomingAppointments.push(appointment);
+                    } else {
+                        pastAppointments.push(appointment);
+                    }
+                });
+                
+                // Display upcoming appointments if any
+                if (upcomingAppointments.length > 0) {
+                    const container = document.getElementById('upcomingAppointmentsContainer');
+                    container.innerHTML = '';
+                    
+                    upcomingAppointments.sort((a, b) => new Date(a.date) - new Date(b.date))
+                        .forEach(appointment => {
+                            const appointmentDate = new Date(appointment.date);
+                            container.appendChild(createAppointmentCard(appointment, appointmentDate, true));
+                        });
+                }
+                
+                // Display past appointments if any
+                if (pastAppointments.length > 0) {
+                    const container = document.getElementById('pastAppointmentsContainer');
+                    container.innerHTML = '';
+                    
+                    pastAppointments.sort((a, b) => new Date(b.date) - new Date(a.date))
+                        .forEach(appointment => {
+                            const appointmentDate = new Date(appointment.date);
+                            container.appendChild(createAppointmentCard(appointment, appointmentDate, false));
+                        });
+                }
+            }
+        }
+        
+        // Function to create an appointment card
+        function createAppointmentCard(appointment, appointmentDate, isUpcoming) {
+            const card = document.createElement('div');
+            card.className = 'appointment-card';
+            
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+            const dateOptions = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+            
+            card.innerHTML = `
+                <div class="row align-items-center">
+                    <div class="col-md-1 d-none d-md-flex">
+                        <div class="doctor-avatar">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <h6 class="mb-1">${appointment.doctorName || 'Dr. Smith'}</h6>
+                        <p class="text-muted small mb-1">${appointment.department || 'General Medicine'}</p>
+                        <span class="status-badge ${isUpcoming ? 'status-upcoming' : 'status-completed'}">
+                            ${isUpcoming ? 'Upcoming' : 'Completed'}
+                        </span>
+                    </div>
+                    <div class="col-md-4">
+                        <p class="mb-1"><i class="far fa-calendar-alt me-2"></i> ${appointmentDate.toLocaleDateString('en-US', dateOptions)}</p>
+                        <p class="mb-0"><i class="far fa-clock me-2"></i> ${appointmentDate.toLocaleTimeString('en-US', timeOptions)}</p>
+                    </div>
+                    <div class="col-md-2 text-md-end mt-2 mt-md-0">
+                        ${isUpcoming ? `
+                        <button class="btn btn-sm btn-outline-danger me-1 mb-1">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary mb-1">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        ` : `
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-file-medical-alt me-1"></i> Details
+                        </button>
+                        `}
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+    </script>
+    <script type="module" src="static/js/patientProfile.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

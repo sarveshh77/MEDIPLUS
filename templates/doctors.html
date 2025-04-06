@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors by Specialization</title>
+    <style>
+       /* Preloader Styles */
+       #preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .spinner {
+        border: 8px solid #f3f3f3; /* Light gray background */
+        border-top: 8px solid #007bff; /* Blue color */
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+ /* Main content hidden initially */
+    #content {
+        display: none;
+    }
+
+    /* Main content visible after preloader is hidden */
+    body.loaded #preloader {
+        display: none;
+    }
+
+    body.loaded #content {
+        display: block;
+    }
+     /* Header Styles */
+     header {
+        background: #eceef0;
+        color: black;
+        padding: 10px 0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    header .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0 20px;
+    }
+    header .logo img {
+        max-height: 50px;
+    }
+    header nav ul {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+    }
+    header nav ul li {
+        margin: 0 15px;
+    }
+    header nav ul li a {
+        color: rgb(20, 19, 19);
+        text-decoration: none;
+        font-size: 16px;
+    }
+    header nav ul li a:hover {
+        text-decoration: underline;
+        color: #007bff;
+    }
+    
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 40px;
+        }
+
+        .specialization-section {
+            margin-bottom: 40px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            text-transform: capitalize;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+        footer {
+            background-color: #007bff; /* Set footer background to #007bff */
+            text-align: center;
+            padding: 10px 0; /* Smaller padding for a smaller footer */
+        }
+        
+        footer p {
+            color: white; /* Set the text color of the paragraph inside footer to white */
+            margin: 0; /* Remove any default margin */
+        }
+
+   hr 
+   {
+    border: none;
+    height: 2px;
+    background-color: #90a2ce; /* Blue color */
+    margin: 20px 0;
+}
+
+    </style>
+</head>
+
+<script>
+    function filterDoctors() {
+    let input = document.getElementById('searchBar').value.toLowerCase();
+    let sections = document.querySelectorAll('.specialization-section');
+
+    sections.forEach(section => {
+        let doctorRows = section.querySelectorAll('tr');
+        let found = false;
+
+        doctorRows.forEach((row, index) => {
+            if (index === 0) return; // Skip table headers
+
+            let doctorName = row.cells[0].innerText.toLowerCase(); // Assuming Name is in the first column
+            if (doctorName.includes(input)) {
+                row.style.display = "";
+                found = true;
+            } else {
+                row.style.display = "none";
+            }
+        });
+        // Hide specialization section if no doctors match
+        section.style.display = found ? "" : "none";
+    });
+}
+
+</script>
+<body>
+    <!-- Preloader -->
+    <div id="preloader">
+      <div class="spinner"></div>
+  </div>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html"><img src="../static/img/logo.png" alt="Logo"></a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('doctors') }}">Doctors</a></li>
+                    <li><a href="mailto:telimidicine@gmail.com" autocapitalize="false">telimidicine@gmail.com</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <hr>
+
+
+    <div style="display: flex; justify-content: center; margin-bottom: 20px;">
+        <input type="text" id="searchBar" placeholder="🔍 Search for a doctor..." onkeyup="filterDoctors()" style="
+            width: 50%;
+            max-width: 500px;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #007bff;
+            border-radius: 25px;
+            outline: none;
+            transition: 0.3s;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        ">
+    </div>
+    
+
+    <h1>Doctors by Specialization</h1>
+    <div id="specializationsContainer"></div>
+
+    <script type="module" src="../static/js/displayDoctors.js"></script>
+</body>
+<script>
+  // Simulate a loading delay of 3 seconds
+  window.addEventListener('load', function() {
+      setTimeout(function() {
+          document.body.classList.add('loaded');
+      }, 1000);
+  });
+</script>
+	<!-- Footer Area -->
+    <footer>
+        <p>&copy; 2024 Telimedicine</p>
+    </footer>
+    <!--/ End Footer Area -->
+</html>

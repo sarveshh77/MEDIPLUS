@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f8f9fa;
+        }
+
+        h1, h2, p {
+            color: #333;
+            text-align: center;
+        }
+
+        /* Preloader Styles */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3; /* Light gray background */
+            border-top: 8px solid #007bff; /* Blue color */
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Header Styles */
+        header {
+            background: #eceef0;
+            color: black;
+            padding: 10px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        header .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 20px;
+        }
+        header .logo img {
+            max-height: 50px;
+        }
+        header nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+        header nav ul li {
+            margin: 0 15px;
+        }
+        header nav ul li a {
+            color: rgb(20, 19, 19);
+            text-decoration: none;
+            font-size: 16px;
+        }
+        header nav ul li a:hover {
+            text-decoration: underline;
+            color: #007bff;
+        }
+
+        /* About Section Styles */
+        .about-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .about-container h1,
+        .about-container h2 {
+            color: #007bff;  /* Apply #007bff color to titles */
+        }
+        .about-container p {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        .about-container .features {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .feature-box {
+            flex: 1 1 calc(33.333% - 20px);
+            background: #f1f1f1;
+            margin: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .feature-box h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #333; /* Default title color */
+            transition: color 0.3s;
+        }
+        .feature-box p {
+            font-size: 14px;
+        }
+
+        /* Hover Effect on Features */
+        .feature-box:hover {
+            background-color: #007bff; /* Hover background */
+            color: white; /* Text color on hover */
+        }
+        .feature-box:hover h2 {
+            color: white; /* Change title color to white when hovering */
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #007bff; /* Set footer background to #007bff */
+            text-align: center;
+            padding: 10px 0; /* Smaller padding for a smaller footer */
+        }
+        
+        footer p {
+            color: white; /* Set the text color of the paragraph inside footer to white */
+            margin: 0; /* Remove any default margin */
+        }
+
+        /* Main content hidden initially */
+        #content {
+            display: none;
+        }
+
+        /* Main content visible after preloader is hidden */
+        body.loaded #preloader {
+            display: none;
+        }
+
+        body.loaded #content {
+            display: block;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html"><img src="../static/img/logo.png" alt="Logo"></a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('doctors') }}">Doctors</a></li>
+                    <li><a href="mailto:telimidicine@gmail.com" autocapitalize="false">telimidicine@gmail.com</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- About Us Section -->
+    <div id="content" class="about-container">
+        <h1>About Us</h1>
+        <p>
+            Welcome to Telimidicine, a cutting-edge telemedicine platform designed to bridge the gap between patients and doctors.
+            We believe in making healthcare accessible, efficient, and seamless for everyone, no matter where they are.
+        </p>
+        <p>
+            Our mission is to empower patients and healthcare professionals by providing innovative solutions like real-time appointment
+            scheduling, global time zone synchronization, and secure communication. Whether you're a patient seeking trusted care or a
+            doctor looking to manage appointments efficiently, Telimidicine is here to simplify your healthcare journey.
+        </p>
+
+        <h2>Our Features</h2>
+        <div class="features">
+            <div class="feature-box">
+                <h2>Effortless Appointment Booking</h2>
+                <p>Schedule appointments with top doctors in just a few clicks, anytime and anywhere.</p>
+            </div>
+            <div class="feature-box">
+                <h2>Verified Doctors</h2>
+                <p>Our platform connects you with certified and experienced doctors across various specialties.</p>
+            </div>
+            <div class="feature-box">
+                <h2>Time Zone Synchronization</h2>
+                <p>Global accessibility with automatic time zone adjustments for seamless scheduling.</p>
+            </div>
+            <div class="feature-box">
+                <h2>Real-Time Notifications</h2>
+                <p>Stay updated with instant reminders and notifications for your appointments.</p>
+            </div>
+            <div class="feature-box">
+                <h2>Patient and Doctor Dashboards</h2>
+                <p>Manage your appointments, schedules, and profiles effortlessly in one place.</p>
+            </div>
+            <div class="feature-box">
+                <h2>Secure and Reliable</h2>
+                <p>We prioritize your privacy and ensure secure communication between patients and doctors.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Simulate a loading delay of 3 seconds
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.body.classList.add('loaded');
+            }, 1000);  // 3 seconds delay (3000 milliseconds)
+        });
+    </script>
+
+    <footer>
+        <p>&copy; 2024 Telimidicine</p>
+    </footer>
+</body>
+</html>
