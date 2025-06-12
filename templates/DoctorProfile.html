@@ -290,6 +290,8 @@
     let currentAppointmentData = null;
     let currentAppointments = [];
     let completedAppointmentsDate = new Date();
+    let updateInterval;
+    let lastFetchedDate = null;
 
     // Logout functionality
     document.getElementById('logout-btn').addEventListener('click', function() {
@@ -392,6 +394,18 @@
 
     let currentDate = new Date();
     let selectedDate = null;
+
+    // Helper function to convert time string to minutes
+    function timeToMinutes(timeStr) {
+      if (!timeStr) return 0;
+      try {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return hours * 60 + minutes;
+      } catch (error) {
+        console.error('Error converting time to minutes:', error);
+        return 0;
+      }
+    }
 
     function generateCalendar(date) {
       const year = date.getFullYear();
@@ -510,7 +524,222 @@
       return [year, month, day].join('-');
     }
 
+    // Helper function to format time difference
+    function formatTimeDifference(minutes) {
+      if (minutes < 0) return 'Past';
+      const hours = Math.floor(minutes / 60);
+      const mins = minutes % 60;
+      if (hours > 0) {
+        return `${hours}h ${mins}m`;
+      }
+      return `${mins}m`;
+    }
+
+    // Function to start real-time updates
+    function startRealTimeUpdates() {
+      if (updateInterval) {
+        clearInterval(updateInterval);
+      }
+
+      // Update every 30 seconds
+      updateInterval = setInterval(() => {
+        if (lastFetchedDate) {
+          updateAppointmentTimes();
+        }
+      }, 30000);
+    }
+
+    // Function to update appointment times without refetching
+    function updateAppointmentTimes() {
+      const now = new Date();
+      const currentTime = now.getHours() * 60 + now.getMinutes();
+      const currentDateStr = now.toISOString().split('T')[0];
+      const isToday = lastFetchedDate === currentDateStr;
+
+      document.querySelectorAll('.appointment-card').forEach(card => {
+        try {
+          const appointmentData = JSON.parse(card.dataset.appointmentData);
+          const appointmentTime = appointmentTime = appointmentData.appointmentTime ? 
+            timeToMinutes(appointmentData.appointmentTime) : 0;
+          const severityValue = parseInt(appointmentData.severityValue) || 0;
+          
+          // Calculate time status
+          const isPast = isToday && appointmentTime < currentTime;
+          const inArrivalWindow = isToday && 
+            (appointmentTime - currentTime <= ARRIVAL_WINDOW && appointmentTime - currentTime > 0);
+          const timeDiff = appointmentTime - currentTime;
+          
+          // Update time status text
+          let timeStatusText = '';
+          if (isToday && !isPast) {
+            if (inArrivalWindow) {
+              timeStatusText = `<span class="arrival-time">Expected arrival within ${formatTimeDifference(timeDiff)}</span>`;
+              card.classList.add('arrival-window');
+              if (severityValue >= HIGH_SEVERITY) {
+                card.classList.add('emergency-arrival');
+              }
+            } else {
+              timeStatusText = `<span class="waiting-time">Waiting time: ${formatTimeDifference(timeDiff)}</span>`;
+            }
+          }
+
+          // Update badges
+          const typeSpan = card.querySelector('.appointment-type');
+          if (typeSpan) {
+            let badges = `${appointmentData.type === 'virtual' ? 'Virtual Consultation' : 'In-Person Visit'}`;
+            if (inArrivalWindow) {
+              badges += ' <span class="arrival-badge">ARRIVING SOON</span>';
+            }
+            if (severityValue >= CRITICAL_SEVERITY && !isPast) {
+              badges += ' <span class="critical-badge">CRITICAL</span>';
+            } else if (severityValue >= HIGH_SEVERITY && !isPast) {
+              badges += ' <span class="high-priority-badge">HIGH PRIORITY</span>';
+            }
+            typeSpan.innerHTML = `<i class="fas fa-${appointmentData.type === 'virtual' ? 'video' : 'user-md'}"></i> ${badges}`;
+          }
+
+          // Update time display
+          const timeDiv = card.querySelector('.appointment-time');
+          if (timeDiv) {
+            timeDiv.innerHTML = `
+              <i class="fas fa-clock"></i>
+              <strong>Appointment Time:</strong> ${appointmentData.appointmentTime ? 
+                new Date(`2000-01-01 ${appointmentData.appointmentTime}`).toLocaleTimeString('en-US', 
+                  { hour: 'numeric', minute: '2-digit', hour12: true }
+                ) : "To be scheduled"}
+              ${isPast ? '<span class="past-indicator">(Past)</span>' : ''}
+              ${timeStatusText}
+            `;
+          }
+
+          // Update button states
+          const joinBtn = card.querySelector('.join-btn');
+          if (joinBtn) {
+            joinBtn.disabled = !inArrivalWindow || isPast;
+          }
+          
+          const completeBtn = card.querySelector('.complete-btn');
+          if (completeBtn) {
+            completeBtn.disabled = (!inArrivalWindow && !isPast) || isPast;
+            if (completeBtn.disabled) {
+              completeBtn.style.opacity = '0.5';
+              completeBtn.style.cursor = 'not-allowed';
+            } else {
+              completeBtn.style.opacity = '';
+              completeBtn.style.cursor = '';
+            }
+          }
+
+          // Update card status classes
+          card.classList.toggle('past-appointment', isPast);
+          card.classList.toggle('arrival-window', inArrivalWindow);
+          card.classList.toggle('critical-case', severityValue >= CRITICAL_SEVERITY && !isPast);
+          card.classList.toggle('high-priority', severityValue >= HIGH_SEVERITY && !isPast);
+        } catch (error) {
+          console.error('Error updating appointment card:', error);
+        }
+      });
+
+      // Re-sort appointments if needed
+      const appointmentsList = document.getElementById('appointments-list');
+      const cards = Array.from(appointmentsList.querySelectorAll('.appointment-card'));
+      
+      if (cards.length > 1) {
+        const sortedCards = cards.sort((a, b) => {
+          const dataA = JSON.parse(a.dataset.appointmentData);
+          const dataB = JSON.parse(b.dataset.appointmentData);
+          
+          const timeA = dataA.appointmentTime ? timeToMinutes(dataA.appointmentTime) : 0;
+          const timeB = dataB.appointmentTime ? timeToMinutes(dataB.appointmentTime) : 0;
+          const severityA = parseInt(dataA.severityValue) || 0;
+          const severityB = parseInt(dataB.severityValue) || 0;
+          
+          const aInArrivalWindow = isToday && (timeA - currentTime <= ARRIVAL_WINDOW && timeA - currentTime > 0);
+          const bInArrivalWindow = isToday && (timeB - currentTime <= ARRIVAL_WINDOW && timeB - currentTime > 0);
+          
+          if (aInArrivalWindow !== bInArrivalWindow) {
+            return aInArrivalWindow ? -1 : 1;
+          }
+          
+          if (aInArrivalWindow && bInArrivalWindow) {
+            if (severityA !== severityB) {
+              return severityB - severityA;
+            }
+            return timeA - timeB;
+          }
+          
+          const aIsPast = timeA < currentTime;
+          const bIsPast = timeB < currentTime;
+          
+          if (aIsPast !== bIsPast) {
+            return aIsPast ? 1 : -1;
+          }
+          
+          if (!aIsPast && !bIsPast) {
+            if ((severityA >= CRITICAL_SEVERITY) !== (severityB >= CRITICAL_SEVERITY)) {
+              return severityB - severityA;
+            }
+            
+            if (Math.abs(timeA - timeB) <= NEAR_TIME_WINDOW) {
+              if (severityA !== severityB) {
+                return severityB - severityA;
+              }
+            }
+            
+            return timeA - timeB;
+          }
+          
+          return timeA - timeB;
+        });
+
+        // Reorder DOM elements
+        sortedCards.forEach(card => appointmentsList.appendChild(card));
+      }
+
+      // Update notifications
+      const hasEmergencyCase = cards.some(card => {
+        const data = JSON.parse(card.dataset.appointmentData);
+        const isPast = isToday && timeToMinutes(data.appointmentTime) < currentTime;
+        return parseInt(data.severityValue) >= CRITICAL_SEVERITY && !isPast;
+      });
+
+      const hasArrivalWindow = cards.some(card => {
+        const data = JSON.parse(card.dataset.appointmentData);
+        const appointmentTime = timeToMinutes(data.appointmentTime);
+        return isToday && (appointmentTime - currentTime <= ARRIVAL_WINDOW && appointmentTime - currentTime > 0);
+      });
+
+      // Update notification area
+      let notificationArea = appointmentsList.querySelector('.notifications-area');
+      if (hasEmergencyCase || hasArrivalWindow) {
+        if (!notificationArea) {
+          notificationArea = document.createElement('div');
+          notificationArea.className = 'notifications-area';
+          appointmentsList.insertBefore(notificationArea, appointmentsList.firstChild);
+        }
+        
+        notificationArea.innerHTML = `
+          ${hasEmergencyCase ? `
+            <div class="emergency-notification">
+              <i class="fas fa-exclamation-triangle"></i>
+              <span>Critical Cases Present - Immediate Attention Required</span>
+            </div>
+          ` : ''}
+          ${hasArrivalWindow ? `
+            <div class="arrival-notification">
+              <i class="fas fa-walking"></i>
+              <span>Patients Expected to Arrive Soon</span>
+            </div>
+          ` : ''}
+        `;
+      } else if (notificationArea) {
+        notificationArea.remove();
+      }
+    }
+
+    // Modify fetchAppointmentsForDate to use real-time updates
     async function fetchAppointmentsForDate(dateString) {
+      lastFetchedDate = dateString;
       appointmentsList.innerHTML = '';
       currentAppointments = [];
       
@@ -518,13 +747,13 @@
         const doctorName = document.getElementById('doctor-name').textContent.trim();
         const specialization = document.getElementById('specialization').textContent.trim();
 
-        // Fetch in-person appointments
+        // Fetch appointments
         const inPersonPath = `DoctorsBySpecialization/${specialization}/Doctors/${doctorName}/Appointments/in-person/${dateString}`;
-        const inPersonSnapshot = await getDocs(collection(db, inPersonPath));
-
-        // Fetch virtual appointments
         const virtualPath = `DoctorsBySpecialization/${specialization}/Doctors/${doctorName}/Appointments/virtual/${dateString}`;
-        const virtualSnapshot = await getDocs(collection(db, virtualPath));
+        const [inPersonSnapshot, virtualSnapshot] = await Promise.all([
+          getDocs(collection(db, inPersonPath)),
+          getDocs(collection(db, virtualPath))
+        ]);
 
         // Process appointments
         inPersonSnapshot.forEach(doc => {
@@ -547,12 +776,81 @@
           });
         });
 
-        // Sort appointments
+        // Get current time for real-time comparison
+        const now = new Date();
+        const currentTime = now.getHours() * 60 + now.getMinutes(); // Current time in minutes
+        const currentDateStr = now.toISOString().split('T')[0];
+        const isToday = dateString === currentDateStr;
+
+        // Constants for time windows
+        const ARRIVAL_WINDOW = 45; // 45 minutes before appointment
+        const CRITICAL_SEVERITY = 20; // Severity above this is considered critical
+        const HIGH_SEVERITY = 15; // Severity above this is considered high
+        const NEAR_TIME_WINDOW = 30; // 30 minutes between appointments is considered near
+
+        // Enhanced sorting logic for appointments
         currentAppointments.sort((a, b) => {
-          if (b.severityValue === a.severityValue) {
-            return (a.timestamp || 0) - (b.timestamp || 0);
+          const timeA = a.appointmentTime ? timeToMinutes(a.appointmentTime) : 0;
+          const timeB = b.appointmentTime ? timeToMinutes(b.appointmentTime) : 0;
+          const severityA = parseInt(a.severityValue) || 0;
+          const severityB = parseInt(b.severityValue) || 0;
+          
+          if (isToday) {
+            const aIsPast = timeA < currentTime;
+            const bIsPast = timeB < currentTime;
+            
+            // Calculate arrival windows
+            const aInArrivalWindow = timeA - currentTime <= ARRIVAL_WINDOW && timeA - currentTime > 0;
+            const bInArrivalWindow = timeB - currentTime <= ARRIVAL_WINDOW && timeB - currentTime > 0;
+            
+            // If one appointment is in arrival window and other isn't
+            if (aInArrivalWindow !== bInArrivalWindow) {
+              return aInArrivalWindow ? -1 : 1;
+            }
+            
+            // If both are in arrival window, prioritize by severity
+            if (aInArrivalWindow && bInArrivalWindow) {
+              if (severityA !== severityB) {
+                return severityB - severityA;
+              }
+              return timeA - timeB;
+            }
+            
+            // Handle past vs upcoming
+            if (aIsPast !== bIsPast) {
+              return aIsPast ? 1 : -1;
+            }
+            
+            // For upcoming appointments
+            if (!aIsPast && !bIsPast) {
+              // If one is critical severity
+              if ((severityA >= CRITICAL_SEVERITY) !== (severityB >= CRITICAL_SEVERITY)) {
+                return severityB - severityA;
+              }
+              
+              // If appointments are within near time window
+              if (Math.abs(timeA - timeB) <= NEAR_TIME_WINDOW) {
+                if (severityA !== severityB) {
+                  return severityB - severityA;
+                }
+              }
+              
+              return timeA - timeB;
+            }
           }
-          return (b.severityValue || 0) - (a.severityValue || 0);
+          
+          // For future dates
+          if ((severityA >= CRITICAL_SEVERITY) !== (severityB >= CRITICAL_SEVERITY)) {
+            return severityB - severityA;
+          }
+          
+          if (Math.abs(timeA - timeB) <= NEAR_TIME_WINDOW) {
+            if (severityA !== severityB) {
+              return severityB - severityA;
+            }
+          }
+          
+          return timeA - timeB;
         });
 
         // Display appointments
@@ -566,23 +864,68 @@
           return;
         }
 
+        let hasEmergencyCase = false;
+        let hasArrivalWindow = false;
+
         currentAppointments.forEach((appointment, index) => {
           const appointmentCard = document.createElement('div');
           appointmentCard.className = `appointment-card ${appointment.type}`;
           
-          if (index === 0) {
-            appointmentCard.style.borderLeft = '4px solid var(--accent-color)';
-            appointmentCard.style.boxShadow = '0 0 10px rgba(247, 37, 133, 0.2)';
-          }
+          const appointmentTime = appointment.appointmentTime ? timeToMinutes(appointment.appointmentTime) : 0;
+          const severityValue = parseInt(appointment.severityValue) || 0;
+          const isPast = isToday && appointmentTime < currentTime;
+          const inArrivalWindow = isToday && (appointmentTime - currentTime <= ARRIVAL_WINDOW && appointmentTime - currentTime > 0);
           
+          // Update emergency tracking
+          if (severityValue >= CRITICAL_SEVERITY && !isPast) {
+            hasEmergencyCase = true;
+          }
+          if (inArrivalWindow) {
+            hasArrivalWindow = true;
+          }
+
+          // Style based on status
+          if (inArrivalWindow) {
+            appointmentCard.classList.add('arrival-window');
+            if (severityValue >= HIGH_SEVERITY) {
+              appointmentCard.classList.add('emergency-arrival');
+            }
+          } else if (severityValue >= CRITICAL_SEVERITY && !isPast) {
+            appointmentCard.classList.add('critical-case');
+          } else if (severityValue >= HIGH_SEVERITY && !isPast) {
+            appointmentCard.classList.add('high-priority');
+          }
+
+          if (isPast) {
+            appointmentCard.classList.add('past-appointment');
+          }
+
+          // Calculate waiting/arrival time text
+          let timeStatusText = '';
+          if (isToday && !isPast) {
+            const timeDiff = appointmentTime - currentTime;
+            if (inArrivalWindow) {
+              timeStatusText = `<span class="arrival-time">Expected arrival within ${formatTimeDifference(timeDiff)}</span>`;
+            } else {
+              const hours = Math.floor(timeDiff / 60);
+              const minutes = timeDiff % 60;
+              timeStatusText = hours > 0 ? 
+                `<span class="waiting-time">Waiting time: ${formatTimeDifference(timeDiff)}</span>` : 
+                `<span class="waiting-time">Waiting time: ${formatTimeDifference(timeDiff)}</span>`;
+            }
+          }
+
           appointmentCard.innerHTML = `
             <div class="appointment-header">
               <div class="appointment-type">
                 <i class="fas fa-${appointment.type === 'virtual' ? 'video' : 'user-md'}"></i>
                 ${appointment.type === 'virtual' ? 'Virtual Consultation' : 'In-Person Visit'}
+                ${inArrivalWindow ? '<span class="arrival-badge">ARRIVING SOON</span>' : ''}
+                ${severityValue >= CRITICAL_SEVERITY ? '<span class="critical-badge">CRITICAL</span>' : 
+                  severityValue >= HIGH_SEVERITY ? '<span class="high-priority-badge">HIGH PRIORITY</span>' : ''}
               </div>
               <div class="appointment-severity">
-                <strong>Severity:</strong> ${appointment.severityValue || "N/A"}
+                <strong>Severity:</strong> ${severityValue || "N/A"}
               </div>
             </div>
             <div class="appointment-patient">
@@ -594,20 +937,26 @@
               <span>Symptoms: ${appointment.symptoms || "N/A"}</span>
             </div>
             <div class="appointment-time">
-      <i class="fas fa-clock"></i>
-      <strong>Appointment Time:</strong> ${appointment.appointmentTime  || "To be scheduled"}
-    </div>
+              <i class="fas fa-clock"></i>
+              <strong>Appointment Time:</strong> ${appointment.appointmentTime ? 
+                new Date(`2000-01-01 ${appointment.appointmentTime}`).toLocaleTimeString('en-US', 
+                  { hour: 'numeric', minute: '2-digit', hour12: true }
+                ) : "To be scheduled"}
+              ${isPast ? '<span class="past-indicator">(Past)</span>' : ''}
+              ${timeStatusText}
+            </div>
             <div class="appointment-actions">
               ${appointment.type === 'virtual' ? 
-                '<button class="join-btn"><i class="fas fa-video"></i> Join Meeting</button>' : 
+                `<button class="join-btn" ${!inArrivalWindow || isPast ? 'disabled' : ''}>
+                  <i class="fas fa-video"></i> Join Meeting
+                </button>` : 
                 ''}
-              <button class="complete-btn" ${index !== 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+              <button class="complete-btn" ${(!inArrivalWindow && !isPast) || isPast ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
                 <i class="fas fa-check"></i> Mark as Completed
               </button>
             </div>
           `;
           
-          // Store complete appointment data including username
           appointmentCard.dataset.appointmentData = JSON.stringify({
             ...appointment,
             username: appointment.username || "Not provided"
@@ -616,9 +965,36 @@
           appointmentsList.appendChild(appointmentCard);
         });
 
+        // Add notifications if needed
+        if (hasEmergencyCase || hasArrivalWindow) {
+          const notificationArea = document.createElement('div');
+          notificationArea.className = 'notifications-area';
+          
+          if (hasEmergencyCase) {
+            notificationArea.innerHTML += `
+              <div class="emergency-notification">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Critical Cases Present - Immediate Attention Required</span>
+              </div>
+            `;
+          }
+          
+          if (hasArrivalWindow) {
+            notificationArea.innerHTML += `
+              <div class="arrival-notification">
+                <i class="fas fa-walking"></i>
+                <span>Patients Expected to Arrive Soon</span>
+              </div>
+            `;
+          }
+          
+          appointmentsList.insertBefore(notificationArea, appointmentsList.firstChild);
+        }
+
         // Add event listeners
         document.querySelectorAll('.join-btn').forEach(btn => {
           btn.addEventListener('click', function() {
+            if (this.disabled) return;
             const meetLink = document.getElementById('meet-link').textContent;
             if (meetLink && meetLink !== "N/A") {
               window.open(meetLink, '_blank');
@@ -645,6 +1021,9 @@
           </div>
         `;
       }
+
+      // Start real-time updates after fetching
+      startRealTimeUpdates();
     }
 
     async function fetchCompletedAppointmentsForDate(dateString) {
@@ -675,7 +1054,8 @@
           appointments.push({
             id: doc.id,
             ...appointmentData,
-            completedAt: appointmentData.completedAt?.toDate?.() || new Date()
+            completedAt: appointmentData.completedAt?.toDate?.() || new Date(),
+            appointmentTime: appointmentData.appointmentTime ? new Date(`2000-01-01 ${appointmentData.appointmentTime}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : "Not specified"
           });
         });
         
@@ -689,7 +1069,7 @@
           appointmentCard.className = 'appointment-card completed';
           
           const completedDate = appointment.completedAt.toLocaleDateString();
-          const completedTime = appointment.completedAt.toLocaleTimeString();
+          const completedTime = appointment.completedAt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
           const originalDate = new Date(appointment.originalDate).toLocaleDateString();
           const followUpDate = appointment.prescription?.followUpDate 
             ? new Date(appointment.prescription.followUpDate).toLocaleDateString() 
@@ -775,7 +1155,8 @@
           symptoms: currentAppointmentData.symptoms || "Not provided",
           severityValue: currentAppointmentData.severityValue || "Not specified",
           completedAt: serverTimestamp(),
-          prescription: prescription || null
+          prescription: prescription || null,
+          appointmentTime: currentAppointmentData.appointmentTime ? new Date(`2000-01-01 ${currentAppointmentData.appointmentTime}`).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : "Not specified"
         };
     
         // Add to doctor's completed appointments
@@ -901,6 +1282,125 @@
     window.addEventListener('click', (e) => {
       if (e.target === prescriptionModal) {
         closePrescriptionModal();
+      }
+    });
+
+    // Add CSS styles for new elements
+    const style = document.createElement('style');
+    style.textContent = `
+      .arrival-window {
+        border: 2px solid #2196F3 !important;
+        background-color: #E3F2FD;
+      }
+      
+      .emergency-arrival {
+        border: 2px solid #ff4444 !important;
+        background-color: #fff5f5;
+      }
+      
+      .critical-case {
+        border: 2px solid #ff0000 !important;
+        background-color: #fff0f0;
+      }
+      
+      .high-priority {
+        border: 2px solid #ff4444 !important;
+        background-color: #fff5f5;
+      }
+      
+      .past-appointment {
+        opacity: 0.7;
+        background-color: #f5f5f5;
+      }
+      
+      .arrival-badge {
+        background-color: #2196F3;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        margin-left: 8px;
+      }
+      
+      .critical-badge {
+        background-color: #ff0000;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        margin-left: 8px;
+      }
+      
+      .high-priority-badge {
+        background-color: #ff4444;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.8em;
+        margin-left: 8px;
+      }
+      
+      .arrival-time {
+        color: #2196F3;
+        font-weight: bold;
+        margin-left: 8px;
+      }
+      
+      .waiting-time {
+        color: #666;
+        font-size: 0.9em;
+        margin-left: 8px;
+      }
+      
+      .notifications-area {
+        margin-bottom: 20px;
+      }
+      
+      .emergency-notification {
+        background-color: #ff0000;
+        color: white;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .arrival-notification {
+        background-color: #2196F3;
+        color: white;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .past-indicator {
+        color: #999;
+        font-style: italic;
+        margin-left: 8px;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Clean up interval when needed
+    function cleanupRealTimeUpdates() {
+      if (updateInterval) {
+        clearInterval(updateInterval);
+        updateInterval = null;
+      }
+    }
+
+    // Add cleanup on page unload
+    window.addEventListener('unload', cleanupRealTimeUpdates);
+
+    // Initialize real-time updates when doctor profile loads
+    document.addEventListener('DOMContentLoaded', () => {
+      if (selectedDate) {
+        fetchAppointmentsForDate(selectedDate);
       }
     });
 </script>

@@ -27,6 +27,18 @@ const specializations = [
 // Container for tables
 const container = document.getElementById("specializationsContainer");
 
+// Function to format time to AM/PM
+function formatTimeToAMPM(time) {
+    if (!time) return "N/A";
+    try {
+        const [hours, minutes] = time.split(':');
+        const date = new Date(2000, 0, 1, hours, minutes);
+        return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    } catch (error) {
+        return time;
+    }
+}
+
 // Function to fetch and display doctors for a specialization
 async function fetchDoctorsBySpecialization(specialization) {
     try {
@@ -68,13 +80,13 @@ async function fetchDoctorsBySpecialization(specialization) {
             // Handle virtual availability
             const virtualAvailability = doctor.virtualAppointments
                 ? `Virtual: ${doctor.virtualAppointments.days?.join(", ") || "N/A"}<br>
-                   From: ${doctor.virtualAppointments.fromTime || "N/A"} To: ${doctor.virtualAppointments.toTime || "N/A"}`
+                   From: ${formatTimeToAMPM(doctor.virtualAppointments.fromTime)} To: ${formatTimeToAMPM(doctor.virtualAppointments.toTime)}`
                 : "Virtual: Not Available";
         
             // Handle in-person availability
             const inPersonAvailability = doctor.inPersonAppointments
                 ? `In-Person: ${doctor.inPersonAppointments.days?.join(", ") || "N/A"}<br>
-                   From: ${doctor.inPersonAppointments.fromTime || "N/A"} To: ${doctor.inPersonAppointments.toTime || "N/A"}`
+                   From: ${formatTimeToAMPM(doctor.inPersonAppointments.fromTime)} To: ${formatTimeToAMPM(doctor.inPersonAppointments.toTime)}`
                 : "In-Person: Not Available";
         
             // Combine both availabilities

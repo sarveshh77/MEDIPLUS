@@ -104,8 +104,66 @@ async function fetchSeverity(symptoms, days = 0, chronic_disease = false) {
     }
 }
 
+function setMinDateTime() {
+    const now = new Date();
+    const tomorrow = new Date(now);
+    tomorrow.setDate(tomorrow.getDate());
+    
+    // Format date as YYYY-MM-DD
+    const minDate = tomorrow.toISOString().split('T')[0];
+    
+    // Set minimum date for appointment date input
+    const dateInput = document.getElementById('appointmentDate');
+    if (dateInput) {
+        dateInput.min = minDate;
+    }
+
+    // If today is selected, restrict time selection
+    dateInput.addEventListener('change', function() {
+        const selectedDate = this.value;
+        const timeInput = document.getElementById('appointmentTime');
+        
+        if (timeInput) {
+            if (selectedDate === now.toISOString().split('T')[0]) {
+                // If today is selected, set minimum time to current time + 1 hour
+                const currentHour = now.getHours();
+                const nextHour = (currentHour + 1).toString().padStart(2, '0');
+                timeInput.min = `${nextHour}:00`;
+            } else {
+                // For future dates, allow all times
+                timeInput.min = "00:00";
+            }
+        }
+    });
+}
+
+// Call this when document is loaded
+document.addEventListener("DOMContentLoaded", function() {
+    setMinDateTime();
+    // ... existing DOMContentLoaded code ...
+});
+
 async function checkDoctorAvailability(doctorId, appointmentDate, appointmentTime, consultationPref) {
     try {
+        // Enhanced validation for past appointments
+        const now = new Date();
+        const appointmentDateTime = new Date(appointmentDate + 'T' + appointmentTime);
+        const nowPlus15Min = new Date(now.getTime() + 15 * 60000); // Current time + 15 minutes
+
+        // Check if appointment is in the past or less than 15 minutes in the future
+        if (appointmentDateTime <= nowPlus15Min) {
+            alert("Please select an appointment time at least 15 minutes in the future.");
+            return false;
+        }
+
+        // Check if the appointment is too far in the future (e.g., more than 3 months)
+        const threeMonthsFromNow = new Date(now);
+        threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3);
+        if (appointmentDateTime > threeMonthsFromNow) {
+            alert("Appointments can only be booked up to 3 months in advance.");
+            return false;
+        }
+
         const specialization = sessionStorage.getItem("selectedSpecialization");
         if (!specialization) {
             alert("Specialization not found! Please select a specialization.");
@@ -124,9 +182,6 @@ async function checkDoctorAvailability(doctorId, appointmentDate, appointmentTim
         const doctorData = doctorSnap.data();
         const appointmentTypes = doctorData.appointmentTypes || {};
 
-        console.log("Doctor Data:", doctorData);
-        console.log("Selected Consultation Preference:", consultationPref);
-
         // Ensure the doctor supports the selected consultation preference
         if ((consultationPref === "in-person" && !appointmentTypes.inPerson) || 
             (consultationPref === "virtual" && !appointmentTypes.virtual)) {
@@ -142,8 +197,6 @@ async function checkDoctorAvailability(doctorId, appointmentDate, appointmentTim
             return false;
         }
 
-        console.log("Availability:", availability);
-
         const workingDays = availability.days || [];
         const fromTime = availability.fromTime || "00:00";
         const toTime = availability.toTime || "23:59";
@@ -151,7 +204,6 @@ async function checkDoctorAvailability(doctorId, appointmentDate, appointmentTim
 
         // Get the day of the week from appointment date
         const appointmentDay = new Date(appointmentDate).toLocaleDateString('en-US', { weekday: 'long' });
-        console.log("Appointment Day:", appointmentDay);
 
         // Check if the doctor is available on the specified day
         if (!workingDays.includes(appointmentDay)) {
@@ -173,7 +225,7 @@ async function checkDoctorAvailability(doctorId, appointmentDate, appointmentTim
         };
 
         if (!isWithinTimeRange(appointmentTime, fromTime, toTime)) {
-            alert(`Doctor is only available between ${fromTime} - ${toTime} for ${consultationPref} appointments.`);
+            alert(`Doctor is only available between ${formatTime(fromTime)} - ${formatTime(toTime)} for ${consultationPref} appointments.`);
             return false;
         }
 
@@ -182,28 +234,33 @@ async function checkDoctorAvailability(doctorId, appointmentDate, appointmentTim
         const appointmentsRef = collection(db, "DoctorsBySpecialization", specialization, "Doctors", doctorId, "Appointments", appointmentPath);
         const appointmentSnap = await getDocs(appointmentsRef);
 
-        console.log("Existing Appointments:", appointmentSnap.size);
-
+        // Check for maximum appointments per day
         if (appointmentSnap.size >= maxAppointments) {
             alert(`Doctor has reached the maximum number of ${consultationPref} appointments for this day.`);
             return false;
         }
 
-        // Check if the requested time slot is already taken
-        let isTimeSlotTaken = false;
+        // Check for time slot conflicts
+        const APPOINTMENT_BUFFER = 15; // 15 minutes buffer between appointments
+        let isTimeSlotAvailable = true;
+        const requestedTime = timeToMinutes(appointmentTime);
+
         appointmentSnap.forEach((doc) => {
-            const appointmentData = doc.data();
-            if (appointmentData.appointmentTime === appointmentTime) {
-                isTimeSlotTaken = true;
+            const existingAppointment = doc.data();
+            const existingTime = timeToMinutes(existingAppointment.appointmentTime);
+            
+            // Check if the requested time is too close to existing appointments
+            if (Math.abs(existingTime - requestedTime) < APPOINTMENT_BUFFER) {
+                isTimeSlotAvailable = false;
+                alert(`This time slot conflicts with an existing appointment. Please select a time at least ${APPOINTMENT_BUFFER} minutes apart from other appointments.`);
+                return;
             }
         });
 
-        if (isTimeSlotTaken) {
-            alert("This time slot is already booked. Please select another time.");
+        if (!isTimeSlotAvailable) {
             return false;
         }
 
-        // alert("Doctor is available for the selected appointment.");
         return true; // Doctor is available
     } catch (error) {
         console.error("Error checking doctor availability:", error);
@@ -213,12 +270,24 @@ async function checkDoctorAvailability(doctorId, appointmentDate, appointmentTim
 }
 function formatTime(timeStr) {
     if (!timeStr) return "N/A";
-    const [hours, minutes] = timeStr.split(':').map(Number);
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const twelveHour = hours % 12 || 12;
-    return `${twelveHour}:${minutes.toString().padStart(2, '0')} ${period}`;
+    try {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        const date = new Date(2000, 0, 1, hours, minutes);
+        return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    } catch (error) {
+        return timeStr;
+    }
 }
 
+function timeToMinutes(timeStr) {
+    if (!timeStr) return 0;
+    try {
+        const [hours, minutes] = timeStr.split(':').map(Number);
+        return hours * 60 + minutes;
+    } catch (error) {
+        return 0;
+    }
+}
 
 // Handle Form Submission
 document.addEventListener("DOMContentLoaded", function () {
@@ -400,11 +469,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     
                     const PRIORITY_THRESHOLD_HOURS = 1 * 60;
                     let position = 0;
-
-                    function timeToMinutes(timeStr) {
-                        const [hours, minutes] = timeStr.split(":").map(Number);
-                        return hours * 60 + minutes; // Convert time to total minutes
-                    }                    
 
                     for (const appt of appointments) {
                         appt.position = ++position;
