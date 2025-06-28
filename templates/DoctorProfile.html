@@ -293,6 +293,12 @@
     let updateInterval;
     let lastFetchedDate = null;
 
+    // Constants for time windows and severity levels
+    const ARRIVAL_WINDOW = 45; // 45 minutes before appointment
+    const CRITICAL_SEVERITY = 20; // Severity above this is considered critical
+    const HIGH_SEVERITY = 15; // Severity above this is considered high
+    const NEAR_TIME_WINDOW = 30; // 30 minutes between appointments is considered near
+
     // Logout functionality
     document.getElementById('logout-btn').addEventListener('click', function() {
       localStorage.removeItem("doctorUniqueKey");
@@ -559,7 +565,7 @@
       document.querySelectorAll('.appointment-card').forEach(card => {
         try {
           const appointmentData = JSON.parse(card.dataset.appointmentData);
-          const appointmentTime = appointmentTime = appointmentData.appointmentTime ? 
+          const appointmentTime = appointmentData.appointmentTime ? 
             timeToMinutes(appointmentData.appointmentTime) : 0;
           const severityValue = parseInt(appointmentData.severityValue) || 0;
           
@@ -657,38 +663,32 @@
           const aInArrivalWindow = isToday && (timeA - currentTime <= ARRIVAL_WINDOW && timeA - currentTime > 0);
           const bInArrivalWindow = isToday && (timeB - currentTime <= ARRIVAL_WINDOW && timeB - currentTime > 0);
           
+          // First priority: Critical cases in arrival window
+          if ((severityA >= CRITICAL_SEVERITY && aInArrivalWindow) !== (severityB >= CRITICAL_SEVERITY && bInArrivalWindow)) {
+            return (severityA >= CRITICAL_SEVERITY && aInArrivalWindow) ? -1 : 1;
+          }
+          
+          // Second priority: High priority cases in arrival window
+          if ((severityA >= HIGH_SEVERITY && aInArrivalWindow) !== (severityB >= HIGH_SEVERITY && bInArrivalWindow)) {
+            return (severityA >= HIGH_SEVERITY && aInArrivalWindow) ? -1 : 1;
+          }
+          
+          // Third priority: Any case in arrival window
           if (aInArrivalWindow !== bInArrivalWindow) {
             return aInArrivalWindow ? -1 : 1;
           }
           
-          if (aInArrivalWindow && bInArrivalWindow) {
-            if (severityA !== severityB) {
-              return severityB - severityA;
-            }
-            return timeA - timeB;
+          // Fourth priority: Critical cases not in arrival window
+          if ((severityA >= CRITICAL_SEVERITY) !== (severityB >= CRITICAL_SEVERITY)) {
+            return severityB - severityA;
           }
           
-          const aIsPast = timeA < currentTime;
-          const bIsPast = timeB < currentTime;
-          
-          if (aIsPast !== bIsPast) {
-            return aIsPast ? 1 : -1;
+          // Fifth priority: High priority cases not in arrival window
+          if ((severityA >= HIGH_SEVERITY) !== (severityB >= HIGH_SEVERITY)) {
+            return severityB - severityA;
           }
           
-          if (!aIsPast && !bIsPast) {
-            if ((severityA >= CRITICAL_SEVERITY) !== (severityB >= CRITICAL_SEVERITY)) {
-              return severityB - severityA;
-            }
-            
-            if (Math.abs(timeA - timeB) <= NEAR_TIME_WINDOW) {
-              if (severityA !== severityB) {
-                return severityB - severityA;
-              }
-            }
-            
-            return timeA - timeB;
-          }
-          
+          // Sixth priority: Time-based sorting
           return timeA - timeB;
         });
 
