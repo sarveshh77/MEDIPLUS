@@ -1,52 +1,42 @@
-# utils.py
+import os
 import pickle
 import numpy as np
+from dotenv import load_dotenv
 import firebase_admin
-from firebase_admin import credentials
+from firebase_admin import credentials, firestore
 from google.cloud.firestore_v1 import FieldFilter
-import firebase_admin
-from firebase_admin import credentials, firestore, storage
-import os
 
-# Firebase configuration (same as in your JS code)
-firebase_config = {
-    "apiKey": "AIzaSyC0ncA7or5DGpfMj3bxYpz7pAmNDhJy9aM",
-    "authDomain": "bookmydoc-7b3d1.firebaseapp.com",
-    "projectId": "bookmydoc-7b3d1",
-    "storageBucket": "bookmydoc-7b3d1.firebasestorage.app",
-    "messagingSenderId": "182899610658",
-    "appId": "1:182899610658:web:105b642d77c7a4b1fb267b",
-    "measurementId": "G-NBX1LDNMV3"
-}
+# ✅ Load environment variables from .env file
+load_dotenv()
 
-# Initialize Firebase Admin SDK using environment variables
+# ✅ Create the service account dictionary from environment variables
 firebase_service_account = {
-    "type": os.environ.get("FIREBASE_TYPE"),
-    "project_id": os.environ.get("FIREBASE_PROJECT_ID"),
-    "private_key_id": os.environ.get("FIREBASE_PRIVATE_KEY_ID"),
-    "private_key": os.getenv("FIREBASE_PRIVATE_KEY"),
-    "client_email": os.environ.get("FIREBASE_CLIENT_EMAIL"),
-    "client_id": os.environ.get("FIREBASE_CLIENT_ID"),
-    "auth_uri": os.environ.get("FIREBASE_AUTH_URI"),
-    "token_uri": os.environ.get("FIREBASE_TOKEN_URI"),
-    "auth_provider_x509_cert_url": os.environ.get("FIREBASE_AUTH_PROVIDER_X509_CERT_URL"),
-    "client_x509_cert_url": os.environ.get("FIREBASE_CLIENT_X509_CERT_URL"),
-    "universe_domain": os.environ.get("FIREBASE_UNIVERSE_DOMAIN"),
+    "type": os.getenv("FIREBASE_TYPE"),
+    "project_id": os.getenv("FIREBASE_PROJECT_ID"),
+    "private_key_id": os.getenv("FIREBASE_PRIVATE_KEY_ID"),
+    "private_key": os.getenv("FIREBASE_PRIVATE_KEY").replace("\\n", "\n"),
+    "client_email": os.getenv("FIREBASE_CLIENT_EMAIL"),
+    "client_id": os.getenv("FIREBASE_CLIENT_ID"),
+    "auth_uri": os.getenv("FIREBASE_AUTH_URI"),
+    "token_uri": os.getenv("FIREBASE_TOKEN_URI"),
+    "auth_provider_x509_cert_url": os.getenv("FIREBASE_AUTH_PROVIDER_X509_CERT_URL"),
+    "client_x509_cert_url": os.getenv("FIREBASE_CLIENT_X509_CERT_URL"),
+    "universe_domain": os.getenv("FIREBASE_UNIVERSE_DOMAIN")
 }
 
-cred = credentials.Certificate(firebase_service_account)
-firebase_admin.initialize_app(cred)
+# ✅ Initialize Firebase only if not already initialized
+if not firebase_admin._apps:
+    cred = credentials.Certificate(firebase_service_account)
+    firebase_admin.initialize_app(cred)
 
-# Initialize Firestore
+# ✅ Initialize Firestore
 db = firestore.client()
 
-
-
-# Load the trained model
+# ✅ Load the trained ML model
 def load_model(model_path):
     return pickle.load(open(model_path, "rb"))
 
-# Symptoms and Disease Mapping
+# ✅ Symptoms and Disease Mapping
 symptoms_list = {
     "itching": 0, "skin_rash": 1, "nodal_skin_eruptions": 2, "continuous_sneezing": 3, "shivering": 4,
     "chills": 5, "joint_pain": 6, "stomach_pain": 7, "acidity": 8, "ulcers_on_tongue": 9, "muscle_wasting": 10,
@@ -78,7 +68,7 @@ symptoms_list = {
     "blister": 129, "red_sore_around_nose": 130, "yellow_crust_ooze": 131
 }
 
-# Disease-to-Specialist Mapping
+# ✅ Mapping disease to specialists
 specialists = {
     "Fungal infection": "Dermatologist",
     "Allergy": "Allergist",
@@ -123,6 +113,7 @@ specialists = {
     "Impetigo": "Dermatologist"
 }
 
+# ✅ Disease labels
 diseases_list = {
     15: 'Fungal infection', 4: 'Allergy', 16: 'GERD', 9: 'Chronic cholestasis', 14: 'Drug Reaction',
     33: 'Peptic ulcer diseae', 1: 'AIDS', 12: 'Diabetes ', 17: 'Gastroenteritis', 6: 'Bronchial Asthma',
@@ -135,7 +126,7 @@ diseases_list = {
     38: 'Urinary tract infection', 35: 'Psoriasis', 27: 'Impetigo'
 }
 
-# Convert symptoms to input vector
+# ✅ Convert symptoms to input vector
 def create_input_vector(symptoms):
     input_vector = np.zeros(len(symptoms_list))
     for symptom in symptoms:
@@ -143,33 +134,24 @@ def create_input_vector(symptoms):
             input_vector[symptoms_list[symptom]] = 1
     return input_vector
 
-
+# ✅ Predict disease and specialist
 def predict_disease(model, input_vector):
     predicted_label = model.predict([input_vector])[0]
     predicted_disease = diseases_list.get(predicted_label, "Unknown Disease")
     specialist = specialists.get(predicted_disease, "General Physician")
     return predicted_disease, specialist
 
-# # Fetch disease info (currently hardcoded)
-# def get_disease_info(disease):
-#     disease_description = f"Sample description for {disease}"
-#     precautions = ["Precaution 1", "Precaution 2", "Precaution 3"]
-#     return disease_description, precautions
-
+# ✅ Fetch doctors from Firebase
 def fetch_doctors(specialist, city):
-    """Fetch doctors from Firebase based on specialist and city."""
     doctors = []
     try:
         doctors_ref = db.collection(f"DoctorsBySpecialization/{specialist}/Doctors")
-        query = doctors_ref.where(filter=FieldFilter("city", "==", city)).limit(4)  # Limit to 4 doctors
+        query = doctors_ref.where(filter=FieldFilter("city", "==", city)).limit(4)
         docs = query.stream()
-
         for doc in docs:
             doctor = doc.to_dict()
             print(doctor)
             doctors.append(doctor)
-
     except Exception as e:
         print(f"Error fetching doctors: {e}")
-
     return doctors

@@ -3,6 +3,7 @@ from Scrapper import fetch_doctor_details  # Import the scraper function
 import pandas as pd
 from helperPred import load_model, create_input_vector, predict_disease, fetch_doctors
 from flask_session import Session
+from dotenv import load_dotenv
 
 
 app = Flask(__name__)
@@ -14,6 +15,8 @@ app.secret_key = 'secret'
 
 app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
+
+load_dotenv()
 
 def load_severity_score(csv_file):
     """Loads symptom severity scores from a CSV file and returns a dictionary."""
