@@ -145,9 +145,9 @@ def NearestDoctor():
     return render_template('NearestDoctor.html')
 
 
-@app.route("/Bookappointment",methods=['POST','GET'])
+@app.route("/bookappoinment",methods=['POST','GET'])
 def Bookappointment():
-    return render_template('Bookappoinment.html')
+    return render_template('bookappoinment.html')
 
 
 @app.route('/validate_doctor', methods=['POST'])
