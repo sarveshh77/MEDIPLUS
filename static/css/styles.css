@@ -62,4 +62,39 @@ body {
     font-weight: bold;
     margin-bottom: 5px;
   }
+  
+  @media (max-width: 991px) {
+    .container {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 0 10px !important;
+    }
+    .specialization-section, .doctor-list li {
+      padding: 10px 5px !important;
+      margin-bottom: 10px !important;
+    }
+    .doctor-list li {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+    }
+  }
+  @media (max-width: 575px) {
+    .container {
+      padding: 0 5px !important;
+    }
+    h1, h2, h3 {
+      font-size: 1.2rem !important;
+    }
+    .specialization-section, .doctor-list li {
+      padding: 8px 2px !important;
+    }
+  }
+  @media (max-width: 400px) {
+    .container {
+      padding: 0 2px !important;
+    }
+    .doctor-list li {
+      font-size: 0.95rem !important;
+    }
+  }
       

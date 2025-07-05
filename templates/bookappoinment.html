@@ -27,6 +27,52 @@
 			html {
 				scroll-behavior: smooth;
 			}
+			@media (max-width: 991px) {
+				.nav-tabs {
+					flex-direction: column !important;
+					border-bottom: none !important;
+				}
+				.nav-tabs .nav-link {
+					width: 100% !important;
+					margin-bottom: 5px !important;
+					border-radius: 6px !important;
+					font-size: 1rem !important;
+					padding: 12px 10px !important;
+				}
+				.dropdown-menu {
+					width: 100% !important;
+					min-width: 120px !important;
+					left: 0 !important;
+					position: static !important;
+				}
+				.dropdown-item {
+					font-size: 1rem !important;
+					padding: 12px 10px !important;
+				}
+				.btn, button {
+					width: 100% !important;
+					font-size: 1rem !important;
+					padding: 12px 15px !important;
+				}
+				.radio-group {
+					flex-direction: column !important;
+					gap: 10px !important;
+					align-items: flex-start !important;
+				}
+			}
+			@media (max-width: 575px) {
+				.nav-tabs .nav-link {
+					font-size: 0.95rem !important;
+					padding: 10px 8px !important;
+				}
+				.btn, button {
+					font-size: 0.95rem !important;
+					padding: 10px 10px !important;
+				}
+				.radio-group {
+					gap: 6px !important;
+				}
+			}
 		</style>
 		<style>
 			html {

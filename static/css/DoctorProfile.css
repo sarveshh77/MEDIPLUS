@@ -1,4 +1,3 @@
-
       /* Header Styles */
       header {
           background: #eceef0;
@@ -648,3 +647,64 @@
   .loading-spinner i {
     margin-right: 0.5rem;
   } 
+
+@media (max-width: 991px) {
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 10px !important;
+  }
+  .profile-header {
+    flex-direction: column !important;
+    text-align: center !important;
+    padding: 1rem !important;
+  }
+  .profile-image {
+    margin-right: 0 !important;
+    margin-bottom: 1rem !important;
+    width: 120px !important;
+    height: 120px !important;
+  }
+  .profile-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .appointments-section, .completed-appointments-section {
+    padding: 1rem !important;
+  }
+  .btn, button {
+    width: 100% !important;
+    font-size: 1rem !important;
+    padding: 12px 15px !important;
+    margin-bottom: 10px !important;
+  }
+}
+@media (max-width: 575px) {
+  .container {
+    padding: 0 5px !important;
+  }
+  .profile-header, .appointments-section, .completed-appointments-section {
+    padding: 0.5rem !important;
+  }
+  .profile-image {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  .section-title h2, h1, h2, h3 {
+    font-size: 1.2rem !important;
+  }
+  .btn, button {
+    font-size: 1rem !important;
+    padding: 10px 10px !important;
+  }
+}
+@media (max-width: 400px) {
+  .profile-image {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  .btn, button {
+    font-size: 0.9rem !important;
+    padding: 8px 8px !important;
+  }
+} 

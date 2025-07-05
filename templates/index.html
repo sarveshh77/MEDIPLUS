@@ -113,6 +113,33 @@
 			}
 			
 		</style>
+		<style>
+@media (max-width: 991px) {
+  .schedule .row {
+    flex-direction: column !important;
+    display: flex !important;
+  }
+  .single-schedule {
+    width: 100% !important;
+    height: auto !important;
+    margin-bottom: 20px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  .single-schedule .inner {
+    min-height: unset !important;
+    height: auto !important;
+  }
+}
+@media (max-width: 575px) {
+  .single-schedule {
+    margin-bottom: 16px !important;
+  }
+  .single-schedule .inner {
+    padding: 10px !important;
+  }
+}
+</style>
 		
 	
 		<!-- Preloader -->

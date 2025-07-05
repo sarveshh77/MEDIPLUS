@@ -187,6 +187,35 @@
             display: block;
         }
 
+        @media (max-width: 991px) {
+            #doctorLogin {
+                width: 100% !important;
+                max-width: 95vw !important;
+                padding: 15px !important;
+            }
+            header .container {
+                flex-direction: column !important;
+                padding: 0 10px !important;
+            }
+            header nav ul {
+                flex-direction: column !important;
+                margin-top: 10px !important;
+            }
+            .btn, button, input[type="submit"] {
+                width: 100% !important;
+                font-size: 1rem !important;
+                padding: 12px 15px !important;
+            }
+        }
+        @media (max-width: 575px) {
+            #doctorLogin {
+                padding: 8px !important;
+            }
+            .btn, button, input[type="submit"] {
+                font-size: 0.95rem !important;
+                padding: 10px 10px !important;
+            }
+        }
     </style>
 </head>
 <body>

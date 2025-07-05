@@ -160,6 +160,30 @@
             display: block;
         }
 
+        @media (max-width: 991px) {
+            .about-container {
+                max-width: 100% !important;
+                padding: 10px !important;
+            }
+            .features {
+                flex-direction: column !important;
+                gap: 10px !important;
+            }
+            .feature-box {
+                width: 100% !important;
+                margin: 10px 0 !important;
+            }
+        }
+        @media (max-width: 575px) {
+            .about-container {
+                padding: 5px !important;
+            }
+            .feature-box {
+                font-size: 0.95rem !important;
+                padding: 10px 5px !important;
+            }
+        }
+
     </style>
 </head>
 <body>

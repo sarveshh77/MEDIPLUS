@@ -248,6 +248,35 @@
         body.loaded #content {
             display: block;
         }
+
+        @media (max-width: 991px) {
+            .form-container {
+                max-width: 100% !important;
+                padding: 10px !important;
+            }
+            header .container {
+                flex-direction: column !important;
+                padding: 0 10px !important;
+            }
+            header nav ul {
+                flex-direction: column !important;
+                margin-top: 10px !important;
+            }
+            .btn, button, input[type="submit"] {
+                width: 100% !important;
+                font-size: 1rem !important;
+                padding: 12px 15px !important;
+            }
+        }
+        @media (max-width: 575px) {
+            .form-container {
+                padding: 5px !important;
+            }
+            .btn, button, input[type="submit"] {
+                font-size: 0.95rem !important;
+                padding: 10px 10px !important;
+            }
+        }
     </style>
 </head>
 <body>

@@ -614,214 +614,98 @@ Version:	1.1
 
 /* === Universal Mobile Responsive Enhancements === */
 @media (max-width: 991px) {
-  /* Containers & Layouts */
-  .container, .container-fluid, .form-container, #formContainer {
+  .container, .container-fluid {
     width: 100% !important;
     max-width: 100% !important;
     padding-left: 10px !important;
     padding-right: 10px !important;
-    margin: 0 auto !important;
-    box-sizing: border-box !important;
   }
   .row {
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
   [class*="col-"] {
-    padding-left: 6px !important;
-    padding-right: 6px !important;
-    margin-bottom: 10px !important;
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+    margin-bottom: 10px;
   }
-  /* Header & Nav */
-  header, .header {
-    position: relative !important;
-    padding: 0 !important;
-    box-shadow: none !important;
-  }
-  .header .main-menu, header nav ul {
+  .main-menu, .header .main-menu {
     display: none !important;
   }
-  .slicknav_menu, .navbar-toggler {
+  .slicknav_menu {
     display: block !important;
   }
-  .navbar-collapse, .collapse {
-    width: 100% !important;
-    background: #fff !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-  }
-  .navbar-nav {
-    flex-direction: column !important;
-    width: 100% !important;
-  }
-  .navbar-nav .nav-item, .navbar-nav .nav-link {
-    width: 100% !important;
-    text-align: left !important;
-    font-size: 1rem !important;
-    padding: 12px 0 !important;
-  }
-  .get-quote, .header .get-quote {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 8px !important;
-    width: 100% !important;
-    margin: 10px 0 !important;
-    align-items: stretch !important;
-    justify-content: flex-start !important;
-  }
-  .get-quote .btn, .get-quote button, .btn, button, input[type="submit"], input[type="button"] {
-    width: 100% !important;
-    font-size: 1rem !important;
-    padding: 12px 0 !important;
-    margin-bottom: 8px !important;
-    border-radius: 6px !important;
-    text-align: center !important;
-  }
-  .dropdown-menu {
-    position: static !important;
-    width: 100% !important;
-    min-width: 100px !important;
-    box-shadow: none !important;
-    border-radius: 6px !important;
-    margin-top: 0 !important;
-    left: 0 !important;
-  }
-  .dropdown-menu a, .dropdown-item {
-    width: 100% !important;
+  .navbar-toggler {
     display: block !important;
-    font-size: 1rem !important;
-    padding: 10px 0 !important;
   }
-  /* Forms & Cards */
-  form, .form-group, .card, .profile-header, .appointment-section, .appointment-card {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 auto 15px auto !important;
-    box-sizing: border-box !important;
+  .navbar-collapse {
+    display: none !important;
   }
-  input, select, textarea {
+  .btn, button, input[type="submit"], input[type="button"] {
     width: 100% !important;
     font-size: 1rem !important;
-    padding: 12px 10px !important;
-    border-radius: 6px !important;
+    padding: 12px 15px !important;
     margin-bottom: 10px !important;
+  }
+  .form-group {
+    margin-bottom: 15px !important;
   }
   label {
     font-size: 1rem !important;
-    margin-bottom: 6px !important;
+    margin-bottom: 8px !important;
   }
-  /* Profile Images & Avatars */
-  .profile-image, .doctor-avatar {
-    width: 70px !important;
-    height: 70px !important;
-    margin: 0 auto 10px auto !important;
-  }
-  .profile-image i, .doctor-avatar i {
-    font-size: 32px !important;
-  }
-  /* Section Titles & Headings */
-  .section-title h2, h1, h2, h3 {
-    font-size: 1.2rem !important;
-    margin-bottom: 10px !important;
-  }
-  .section-title img {
-    max-width: 60px !important;
-    height: auto !important;
-  }
-  /* Slider & Hero */
-  .slider .single-slider, .hero-slider, .slider {
-    height: 220px !important;
-    min-height: 180px !important;
-    padding: 10px 0 !important;
-  }
-  .slider .single-slider .text, .slider .single-slider h1, .slider .single-slider p {
-    text-align: center !important;
-    font-size: 1rem !important;
-    padding: 0 5px !important;
-  }
-  .slider .single-slider .button {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 8px !important;
-    align-items: center !important;
-  }
-  /* Images */
   img, .img-fluid {
     max-width: 100% !important;
     height: auto !important;
-    display: block !important;
   }
-  /* Tables */
-  table {
-    width: 100% !important;
-    font-size: 0.95rem !important;
-    display: block !important;
-    overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-  th, td {
-    padding: 8px 5px !important;
-    white-space: nowrap !important;
-  }
-  /* Footer */
-  .footer, footer {
-    padding: 10px 0 !important;
-    text-align: center !important;
-  }
-  .footer .single-footer, .footer .copyright, footer p {
-    text-align: center !important;
-    padding: 8px 0 !important;
-    font-size: 0.95rem !important;
-  }
-  /* Hide desktop-only elements */
-  .desktop-only {
-    display: none !important;
-  }
-  /* Remove fixed widths from inline styles */
-  [style*="width: 600px"], [style*="width:800px"], [style*="width: 50%"] {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-  /* Remove fixed paddings/margins from inline styles */
-  [style*="padding: 30px"], [style*="padding: 20px"], [style*="margin: 40px auto"], [style*="margin: 0 auto"] {
-    padding: 10px !important;
-    margin: 0 !important;
-  }
-  /* Modal & Overlay */
-  .modal, #termsModal {
-    width: 95% !important;
-    left: 2.5% !important;
-    padding: 10px !important;
-  }
-  /* Calendar grid in DoctorProfile/PatientProfile */
-  .calendar-grid {
-    grid-template-columns: repeat(7, 1fr) !important;
-    font-size: 0.9rem !important;
-  }
-  /* Responsive nav-tabs */
-  .nav-tabs {
+  .profile-header, .card, .appointment-section {
     flex-direction: column !important;
-    border-bottom: none !important;
+    text-align: center !important;
+    padding: 1rem !important;
   }
-  .nav-tabs .nav-link {
-    width: 100% !important;
-    margin-bottom: 5px !important;
-    border-radius: 6px !important;
+  .profile-image, .doctor-avatar {
+    margin-right: 0 !important;
+    margin-bottom: 1rem !important;
+    width: 120px !important;
+    height: 120px !important;
+  }
+  .profile-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .calendar-section, .appointments-list, .completed-appointments-list {
+    padding: 0.5rem !important;
   }
 }
 
 @media (max-width: 575px) {
-  h1, h2, h3, .section-title h2 {
-    font-size: 1.1rem !important;
+  html, body {
+    font-size: 14px !important;
+    overflow-x: hidden !important;
+  }
+  .container, .container-fluid {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+  .section-title h2, h1, h2, h3 {
+    font-size: 1.2rem !important;
   }
   .profile-header, .card, .appointment-section {
-    padding: 10px !important;
-  }
-  .slider .single-slider {
-    height: 160px !important;
+    padding: 0.5rem !important;
   }
   .btn, button, input[type="submit"], input[type="button"] {
-    font-size: 0.95rem !important;
-    padding: 10px 0 !important;
+    font-size: 1rem !important;
+    padding: 10px 10px !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .profile-image, .doctor-avatar {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  .btn, button, input[type="submit"], input[type="button"] {
+    font-size: 0.9rem !important;
+    padding: 8px 8px !important;
   }
 }

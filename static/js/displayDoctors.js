@@ -130,5 +130,5 @@ window.bookAppointment = (doctorName, specialization) => {
     sessionStorage.setItem("scrollToAppointment", "true");
     sessionStorage.setItem("selectedDoctor", doctorName);
     sessionStorage.setItem("selectedSpecialization", specialization);  
-    window.location.href = '/Bookappointment';
+    window.location.href = '/bookappoinment';
 };
