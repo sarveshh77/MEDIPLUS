@@ -1,6 +1,6 @@
 # 🏥Mediplus
 
-A powerful **AI-powered Telemedicine Web Platform** that predicts diseases, recommends doctors, and simplifies healthcare access through smart automation.
+A powerful **AI-powered Web Platform** that predicts diseases, recommends doctors, and simplifies healthcare access through smart automation.
 
 [![Live Site](https://img.shields.io/badge/Live-Demo-green?style=for-the-badge)](https://mediplus-1-h3zu.onrender.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -126,3 +126,33 @@ cd mediplus
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+
+---
+
+## 📸 Screenshots
+
+> A quick glimpse of the Mediplus platform in action:
+
+| Homepage | Book Appointment | Doctor Dashboard |
+|---------|------------------|------------------|
+| ![Home](https://yourdomain.com/images/homepage.png) | ![Appointment](https://yourdomain.com/images/appointment.png) | ![Dashboard](https://yourdomain.com/images/dashboard.png) |
+
+_> Replace the image URLs with your actual uploaded image links (GitHub repo or cloud storage)._
+
+---
+
+## 📬 Contact
+
+Have questions or suggestions?
+
+- 📧 Email: [your.email@example.com](mailto:your.email@example.com)  
+- 🌐 Portfolio: [your-portfolio-link.com](https://your-portfolio-link.com)  
+- 🐦 Twitter: [@yourhandle](https://twitter.com/yourhandle) *(optional)*  
+- 🔗 LinkedIn: [Your Name](https://linkedin.com/in/your-profile) *(optional)*
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
+
