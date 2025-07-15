@@ -1,21 +1,27 @@
 # 🏥 Telimidicine - Mediplus
 
-A powerful **Telemedicine Web Platform** built using **Flask**, **Firebase**, and **Machine Learning**, designed to connect patients and doctors securely and efficiently.
+A powerful **AI-powered Telemedicine Web Platform** that predicts diseases, recommends doctors, and simplifies healthcare access through smart automation.
 
 [![Live Site](https://img.shields.io/badge/Live-Demo-green?style=for-the-badge)](https://mediplus-1-h3zu.onrender.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ---
 
+## 🌟 Highlighted Features
+
+✅ **AI-Powered Disease Prediction**  
+✅ **Automatic Severity Scoring for Prioritizing Care**  
+✅ **Nearest Doctor Search for Fast, Local Help**  
+✅ **Doctor Credential Verification via Web Scraping**  
+✅ **Time Zone Synchronization for Global Use**  
+✅ **Modern, Professional & Mobile-Responsive UI**  
+✅ **Secure Real-Time Data Management using Firebase**
+
+---
+
 ## 🌐 Overview
 
-**Mediplus** is a modern telemedicine system that enables:
-
-- Seamless **appointment booking** with available doctors
-- **Real-time disease prediction** using ML
-- **Firebase-based authentication** and cloud data storage
-- **Doctor verification** via web scraping
-- Responsive **mobile-first UI** with modern components
+**Mediplus** is an AI-integrated telemedicine platform that connects patients with verified doctors. It predicts diseases from symptoms, prioritizes care based on severity, and enables real-time appointment booking — all on a secure, mobile-friendly web interface.
 
 ---
 
@@ -23,31 +29,30 @@ A powerful **Telemedicine Web Platform** built using **Flask**, **Firebase**, an
 
 ### 👤 User & Doctor Management
 - Patient & Doctor registration and login
-- Profile dashboards for both roles
-- Firebase session and data handling
+- Dedicated dashboards for both users
+- Firebase-based session & profile management
 
 ### 📅 Appointment System
-- Book based on doctor specialization & availability
-- Auto time zone handling
-- View, update, cancel appointments
-- Real-time notifications & reminders
+- Search doctors by specialization and availability
+- Global time zone support for accurate scheduling
+- Real-time notifications for confirmations and updates
 
-### 🧠 ML-Based Disease Prediction
-- Random Forest Classifier model
-- Inputs: Symptoms, duration, chronic diseases
-- Predicts likely disease + recommends a specialist
+### 🧠 Machine Learning Disease Prediction
+- Predicts probable diseases from symptoms
+- Severity-based triage to prioritize critical cases
+- Recommends the right specialist based on ML output
 
 ### 🔍 Doctor Credential Verification
-- Selenium-based web scraping
-- Verifies registration from official medical board
+- Selenium scraper checks doctors' legitimacy against official registry
+- Enhances platform trustworthiness and user safety
 
 ### 📍 Nearest Doctor Search
-- Find doctors near user location or specific area
-- Improved accessibility & response time
+- Patients can locate the closest available doctors by location or need
+- Facilitates fast access to emergency and routine care
 
 ### 🔐 Security & Sessions
-- Flask-Session integration
-- Secrets handled via `.env` and Render environment variables
+- Flask-Session integration for secured sessions
+- Data protection and role-based route handling
 
 ---
 
@@ -55,77 +60,66 @@ A powerful **Telemedicine Web Platform** built using **Flask**, **Firebase**, an
 
 | Layer        | Technologies |
 |--------------|--------------|
-| **Frontend** | HTML, CSS (Mediplus), JS, Firebase SDK |
+| **Frontend** | HTML, CSS (Mediplus Template), JavaScript |
 | **Backend**  | Python, Flask, Flask-Session |
 | **Database** | Firebase Firestore |
-| **ML**       | Random Forest (scikit-learn), Pandas, NumPy |
-| **Scraping** | Selenium |
+| **Machine Learning** | Random Forest, Pandas, NumPy |
+| **Web Scraping** | Selenium |
 | **Deployment** | Gunicorn + Render |
 
 ---
 
-## 📁 Routes Summary
+## 🔄 Key Functional Routes
 
-| Route | Description |
-|-------|-------------|
+| Route | Functionality |
+|-------|----------------|
 | `/` | Homepage |
-| `/LoginPatient` | Patient login |
-| `/LoginDoctor` | Doctor login |
-| `/RegisterDoctor` | Doctor sign-up |
-| `/doctors` | View all doctors |
-| `/DoctorProfile` | Doctor dashboard |
-| `/patient_profile` | Patient dashboard |
-| `/bookappoinment` | Book appointment |
-| `/calculate_severity` | API to calculate severity |
-| `/getPredictedDoctor` | Predict best specialist |
-| `/validate_doctor` | Verify doctor via scraping |
-| `/NearestDoctor` | Find nearest doctor |
-| `/AboutUs` | About the platform |
+| `/LoginPatient` | Patient Login |
+| `/LoginDoctor` | Doctor Login |
+| `/RegisterDoctor` | Doctor Signup |
+| `/DoctorProfile` | Doctor Dashboard |
+| `/patient_profile` | Patient Dashboard |
+| `/bookappoinment` | Appointment Booking |
+| `/getPredictedDoctor` | ML Specialist Recommendation |
+| `/validate_doctor` | Web-Scraping-Based Verification |
+| `/NearestDoctor` | Local Doctor Search |
+| `/AboutUs` | Platform Info Page |
 
 ---
 
-## 🤖 Machine Learning Details
+## 🤖 ML Model Details
 
-- **Model:** Random Forest Classifier
-- **Input Features:** Symptoms, duration, chronic condition status
-- **Output:** Disease prediction + specialist recommendation
-- **Files:** 
-  - `RandomForestPredictor.pkl` – trained model
-  - `symptom_severity.csv` – severity mapping
+- **Model:** `RandomForestPredictor.pkl`
+- **Inputs:** Symptoms, Duration, Chronic Illness status
+- **Outputs:** Predicted Disease, Suggested Specialist
+- **Backend Calculation:** Severity Score based on symptom mapping CSV
 
 ---
 
 ## 🔥 Firebase Integration
 
-- Firestore used for:
-  - Storing patient, doctor & appointment data
-- Realtime Firebase SDK enables:
-  - Instant updates
-  - Notifications
-- Firebase Authentication manages:
-  - Secure user sessions
-
----
-
-## 🖼️ Screenshots
-
-> _(Add actual screenshots of your project UI here, e.g. mobile view, appointment booking, dashboards, etc.)_
+- Firestore used for patient/doctor/appointment data
+- Firebase SDK enables real-time data syncing and updates
+- Authentication + cloud-hosted database
 
 ---
 
 ## 📱 Responsive UI
 
 - Based on **Mediplus HTML template**
-- Fully responsive across desktop, tablet, and mobile
+- Optimized for:
+  - Mobile 📱
+  - Tablet 📲
+  - Desktop 💻
 - Includes:
   - Sliders
-  - Testimonials
-  - Sticky navigation
-  - Dynamic forms
+  - Sticky Navigation
+  - Smooth Scroll
+  - Testimonials & Contact Pages
 
 ---
 
-## 🛠️ Installation
+## 🛠️ Installation & Setup
 
 ```bash
 git clone https://github.com/yourusername/mediplus.git
