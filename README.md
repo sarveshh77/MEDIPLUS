@@ -1,4 +1,4 @@
-# 🏥 Telimidicine - Mediplus
+# 🏥Mediplus
 
 A powerful **AI-powered Telemedicine Web Platform** that predicts diseases, recommends doctors, and simplifies healthcare access through smart automation.
 
@@ -9,11 +9,10 @@ A powerful **AI-powered Telemedicine Web Platform** that predicts diseases, reco
 
 ## 🌟 Highlighted Features
 
-✅ **AI-Powered Disease Prediction**  
+✅ **AI-Powered Specialist Prediction**  
 ✅ **Automatic Severity Scoring for Prioritizing Care**  
 ✅ **Nearest Doctor Search for Fast, Local Help**  
 ✅ **Doctor Credential Verification via Web Scraping**  
-✅ **Time Zone Synchronization for Global Use**  
 ✅ **Modern, Professional & Mobile-Responsive UI**  
 ✅ **Secure Real-Time Data Management using Firebase**
 
@@ -100,7 +99,7 @@ A powerful **AI-powered Telemedicine Web Platform** that predicts diseases, reco
 
 - Firestore used for patient/doctor/appointment data
 - Firebase SDK enables real-time data syncing and updates
-- Authentication + cloud-hosted database
+- Authentication
 
 ---
 
@@ -122,7 +121,7 @@ A powerful **AI-powered Telemedicine Web Platform** that predicts diseases, reco
 ## 🛠️ Installation & Setup
 
 ```bash
-git clone https://github.com/yourusername/mediplus.git
+git clone https://github.com/yourusername/MEDIPLUS.git
 cd mediplus
 python3 -m venv venv
 source venv/bin/activate
