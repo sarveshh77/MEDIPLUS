@@ -1,140 +1,135 @@
-# Mediplus (Telimidicine)
+# 🏥 Telimidicine - Mediplus
 
-Bridging the gap between patients and doctors with AI-powered telemedicine.
+A powerful **Telemedicine Web Platform** built using **Flask**, **Firebase**, and **Machine Learning**, designed to connect patients and doctors securely and efficiently.
 
----
-
-## 🚀 Overview
-
-**Mediplus** is a modern telemedicine platform that connects patients with certified doctors, offers instant disease prediction using machine learning, and provides seamless appointment booking—all in a secure, user-friendly environment.
+[![Live Site](https://img.shields.io/badge/Live-Demo-green?style=for-the-badge)](https://mediplus-1-h3zu.onrender.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ---
 
-## ✨ Features
+## 🌐 Overview
 
-- **Patient & Doctor Registration/Login**  
-  Secure sign-up and login for both patients and doctors.
+**Mediplus** is a modern telemedicine system that enables:
 
-- **Personal Dashboards**  
-  Dedicated dashboards for patients and doctors to manage profiles and appointments.
-
-- **Effortless Appointment Booking**  
-  Book appointments with top doctors in just a few clicks, anytime and anywhere.
-
-- **Nearest Doctor Search**  
-  Find and connect with the closest available doctors based on location or specialization.
-
-- **ML-Based Disease Prediction**  
-  Enter symptoms to get instant disease predictions and specialist recommendations using a trained Random Forest model.
-
-- **Severity Scoring**  
-  Calculates the severity of symptoms to prioritize care.
-
-- **Doctor Verification**  
-  Validates doctor credentials via web scraping of official registries.
-
-- **Time Zone Synchronization**  
-  Global accessibility with automatic time zone adjustments for appointments.
-
-- **Real-Time Notifications**  
-  Instant reminders and updates for appointments.
-
-- **Firebase Integration**  
-  Secure, real-time data storage and user management.
-
-- **Responsive, Modern UI**  
-  Professional design based on the Mediplus HTML template, fully responsive for all devices.
-
-- **Emergency Contact**  
-  Quick access to emergency medical care information.
-
-- **About & Contact Pages**  
-  Learn more about the platform and get support.
+- Seamless **appointment booking** with available doctors
+- **Real-time disease prediction** using ML
+- **Firebase-based authentication** and cloud data storage
+- **Doctor verification** via web scraping
+- Responsive **mobile-first UI** with modern components
 
 ---
 
-## 🛠️ Tech Stack
+## 🚀 Features
 
-- **Backend:** Python (Flask, Flask-Session, Pandas, NumPy, Scikit-learn, Selenium)
-- **Frontend:** HTML, CSS (Mediplus template), JavaScript, Bootstrap
-- **Database:** Firebase Firestore
-- **Machine Learning:** Random Forest Classifier
-- **Other:** dotenv, Gunicorn
+### 👤 User & Doctor Management
+- Patient & Doctor registration and login
+- Profile dashboards for both roles
+- Firebase session and data handling
 
----
+### 📅 Appointment System
+- Book based on doctor specialization & availability
+- Auto time zone handling
+- View, update, cancel appointments
+- Real-time notifications & reminders
 
-## 📦 Setup & Installation
+### 🧠 ML-Based Disease Prediction
+- Random Forest Classifier model
+- Inputs: Symptoms, duration, chronic diseases
+- Predicts likely disease + recommends a specialist
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/Mediplus.git
-   cd Mediplus/MEDIPLUS
-   ```
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. **Set up Firebase:**
-   - Add your Firebase credentials to `serviceAccountKeyFB.json` and configure environment variables as needed.
-4. **Run the application:**
-   ```bash
-   python app.py
-   ```
-5. **Access the app:**
-   - Open your browser and go to `http://localhost:5000`
+### 🔍 Doctor Credential Verification
+- Selenium-based web scraping
+- Verifies registration from official medical board
 
----
+### 📍 Nearest Doctor Search
+- Find doctors near user location or specific area
+- Improved accessibility & response time
 
-## 🧑‍💻 Usage
-
-- **Register/Login** as a patient or doctor.
-- **Patients:**
-  - Enter symptoms, get severity score and disease prediction.
-  - Book appointments with recommended or nearest doctors.
-- **Doctors:**
-  - Manage appointments and view patient details.
-- **Admins:**
-  - Validate new doctor registrations.
+### 🔐 Security & Sessions
+- Flask-Session integration
+- Secrets handled via `.env` and Render environment variables
 
 ---
 
-## 📸 Screenshots
+## 🧰 Tech Stack
 
-> _Add screenshots of your main pages below. Replace the image paths with your actual screenshot files._
-
-### Home Page
-![Home Page](screenshots/home.png)
-
-### Patient Dashboard
-![Patient Dashboard](screenshots/patient_dashboard.png)
-
-### Doctor Dashboard
-![Doctor Dashboard](screenshots/doctor_dashboard.png)
-
-### Appointment Booking
-![Appointment Booking](screenshots/appointment_booking.png)
-
-### Disease Prediction
-![Disease Prediction](screenshots/disease_prediction.png)
-
-### Nearest Doctor Search
-![Nearest Doctor Search](screenshots/nearest_doctor.png)
+| Layer        | Technologies |
+|--------------|--------------|
+| **Frontend** | HTML, CSS (Mediplus), JS, Firebase SDK |
+| **Backend**  | Python, Flask, Flask-Session |
+| **Database** | Firebase Firestore |
+| **ML**       | Random Forest (scikit-learn), Pandas, NumPy |
+| **Scraping** | Selenium |
+| **Deployment** | Gunicorn + Render |
 
 ---
 
-## 📄 License
+## 📁 Routes Summary
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+| Route | Description |
+|-------|-------------|
+| `/` | Homepage |
+| `/LoginPatient` | Patient login |
+| `/LoginDoctor` | Doctor login |
+| `/RegisterDoctor` | Doctor sign-up |
+| `/doctors` | View all doctors |
+| `/DoctorProfile` | Doctor dashboard |
+| `/patient_profile` | Patient dashboard |
+| `/bookappoinment` | Book appointment |
+| `/calculate_severity` | API to calculate severity |
+| `/getPredictedDoctor` | Predict best specialist |
+| `/validate_doctor` | Verify doctor via scraping |
+| `/NearestDoctor` | Find nearest doctor |
+| `/AboutUs` | About the platform |
 
 ---
 
-## 🙌 Acknowledgements
+## 🤖 Machine Learning Details
 
-- [Mediplus HTML Template](http://wpthemesgrid.com/)
-- [Firebase](https://firebase.google.com/)
-- [scikit-learn](https://scikit-learn.org/)
-- [Flask](https://flask.palletsprojects.com/)
+- **Model:** Random Forest Classifier
+- **Input Features:** Symptoms, duration, chronic condition status
+- **Output:** Disease prediction + specialist recommendation
+- **Files:** 
+  - `RandomForestPredictor.pkl` – trained model
+  - `symptom_severity.csv` – severity mapping
 
 ---
 
-> _For any questions or support, please contact [your-email@example.com](mailto:your-email@example.com)_
+## 🔥 Firebase Integration
+
+- Firestore used for:
+  - Storing patient, doctor & appointment data
+- Realtime Firebase SDK enables:
+  - Instant updates
+  - Notifications
+- Firebase Authentication manages:
+  - Secure user sessions
+
+---
+
+## 🖼️ Screenshots
+
+> _(Add actual screenshots of your project UI here, e.g. mobile view, appointment booking, dashboards, etc.)_
+
+---
+
+## 📱 Responsive UI
+
+- Based on **Mediplus HTML template**
+- Fully responsive across desktop, tablet, and mobile
+- Includes:
+  - Sliders
+  - Testimonials
+  - Sticky navigation
+  - Dynamic forms
+
+---
+
+## 🛠️ Installation
+
+```bash
+git clone https://github.com/yourusername/mediplus.git
+cd mediplus
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
