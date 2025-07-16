@@ -867,7 +867,7 @@
         let hasEmergencyCase = false;
         let hasArrivalWindow = false;
 
-        currentAppointments.forEach((appointment, index) => {
+        currentAppointments.forEach(async (appointment, index) => {
           const appointmentCard = document.createElement('div');
           appointmentCard.className = `appointment-card ${appointment.type}`;
           
@@ -915,6 +915,24 @@
             }
           }
 
+          // Fetch user phone number from Firestore
+          let phoneNumber = 'Loading...';
+          let userId = appointment.username || appointment.name || appointment.patientName;
+          if (userId) {
+            try {
+              const userDoc = await getDoc(doc(db, 'users', userId));
+              if (userDoc.exists()) {
+                phoneNumber = userDoc.data().phone || 'Not provided';
+              } else {
+                phoneNumber = 'Not found';
+              }
+            } catch (err) {
+              phoneNumber = 'Error';
+            }
+          } else {
+            phoneNumber = 'Not provided';
+          }
+
           appointmentCard.innerHTML = `
             <div class="appointment-header">
               <div class="appointment-type">
@@ -931,6 +949,10 @@
             <div class="appointment-patient">
               <i class="fas fa-user"></i>
               <span>Patient: ${appointment.name || appointment.patientName || "N/A"}</span>
+            </div>
+            <div class="appointment-patient">
+              <i class="fas fa-phone"></i>
+              <span>Phone: <span class="patient-phone">${phoneNumber}</span></span>
             </div>
             <div class="appointment-patient">
               <i class="fas fa-info-circle"></i>
