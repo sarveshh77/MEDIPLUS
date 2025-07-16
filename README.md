@@ -129,30 +129,14 @@ pip install -r requirements.txt
 
 ---
 
-## 📸 Screenshots
-
-> A quick glimpse of the Mediplus platform in action:
-
-| Homepage | Book Appointment | Doctor Dashboard |
-|---------|------------------|------------------|
-| ![Home](https://yourdomain.com/images/homepage.png) | ![Appointment](https://yourdomain.com/images/appointment.png) | ![Dashboard](https://yourdomain.com/images/dashboard.png) |
-
-_> Replace the image URLs with your actual uploaded image links (GitHub repo or cloud storage)._
-
----
 
 ## 📬 Contact
 
 Have questions or suggestions?
 
-- 📧 Email: [your.email@example.com](mailto:your.email@example.com)  
-- 🌐 Portfolio: [your-portfolio-link.com](https://your-portfolio-link.com)  
-- 🐦 Twitter: [@yourhandle](https://twitter.com/yourhandle) *(optional)*  
-- 🔗 LinkedIn: [Your Name](https://linkedin.com/in/your-profile) *(optional)*
+- 📧 Email: (mailto:bookmydoc28@gmail.com)  
+
 
 ---
 
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
 
