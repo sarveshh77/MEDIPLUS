@@ -132,11 +132,11 @@ pip install -r requirements.txt
 
 ## 📬 Contact
 
-Have questions or suggestions?
+Have questions, feedback, or suggestions?
 
-- 📧 Email: (mailto:bookmydoc28@gmail.com)  
+Feel free to reach out:
 
+📧 **Email:** [bookmydoc28@gmail.com](mailto:bookmydoc28@gmail.com)
 
----
 
 
